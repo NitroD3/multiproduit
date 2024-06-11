@@ -1,53 +1,58 @@
 jQuery(document).ready(function($) {
-    var currentStep = 1;
-
-    function loadOptions(step, options) {
-        var container = $('#' + step + '-options');
-        container.empty();
-        options.forEach(function(option) {
-            var optionHtml = '<div class="option"><img src="' + option.image + '" alt="' + option.name + '"><label>' + option.name + '</label><input type="radio" name="' + step + '" value="' + option.name + '"></div>';
-            container.append(optionHtml);
+    function displayOptions(step, options) {
+        let html = '';
+        options.forEach(option => {
+            html += `<label class="option-label">
+                        <input type="radio" name="${step}" value="${option.name}">
+                        <img src="${option.image}" alt="${option.name}" class="option-image">
+                        <span>${option.name}</span>
+                    </label>`;
         });
+        $(`#${step}-options`).html(html);
     }
 
     function showStep(step) {
         $('.order-step').hide();
-        $('#step-' + step).show();
+        $(`#step-${step}`).show();
     }
 
-    $('#aydenpate-order-form').on('click', '.order-step .option', function() {
-        var selectedStep = $(this).closest('.order-step').attr('id').split('-')[1];
-        if (selectedStep == currentStep) {
+    function updateSummary() {
+        let summaryHtml = `<p>Pâtes: ${$('input[name="pasta"]:checked').val()}</p>
+                           <p>Sauce: ${$('input[name="sauce"]:checked').val()}</p>
+                           <p>Gratiné: ${$('input[name="cheese"]:checked').val()}</p>`;
+        if ($('input[name="dessert"]:checked').val()) {
+            summaryHtml += `<p>Dessert: ${$('input[name="dessert"]:checked').val()}</p>`;
+        }
+        if ($('input[name="drink"]:checked').val()) {
+            summaryHtml += `<p>Boisson: ${$('input[name="drink"]:checked').val()}</p>`;
+        }
+        $('#summary-details').html(summaryHtml);
+    }
+
+    displayOptions('pasta', aydenpate_data.pasta_options);
+    displayOptions('sauce', aydenpate_data.sauce_options);
+    displayOptions('cheese', aydenpate_data.cheese_options);
+    displayOptions('dessert', aydenpate_data.dessert_options);
+    displayOptions('drink', aydenpate_data.drink_options);
+
+    let currentStep = 1;
+    showStep(currentStep);
+
+    $('input[type="radio"]').on('change', function() {
+        updateSummary();
+        if (currentStep < 5) {
             currentStep++;
             showStep(currentStep);
-        }
-        if (currentStep > 5) {
+        } else {
             $('#delivery-details').show();
-        }
-        if (currentStep > 6) {
             $('#order-summary').show();
-            $('.order-step').hide();
-            $('#delivery-details').hide();
-            var summaryHtml = '';
-            $('input[type="radio"]:checked').each(function() {
-                summaryHtml += '<p>' + $(this).closest('label').text() + ': ' + $(this).val() + '</p>';
-            });
-            $('#summary-details').html(summaryHtml);
         }
     });
 
-    loadOptions('pasta', aydenpate_data.pasta_options);
-    loadOptions('sauce', aydenpate_data.sauce_options);
-    loadOptions('cheese', aydenpate_data.cheese_options);
-    loadOptions('dessert', aydenpate_data.dessert_options);
-    loadOptions('drink', aydenpate_data.drink_options);
-
-    showStep(currentStep);
-
     $('#add-to-cart').on('click', function() {
-        var formData = {
+        let data = {
             action: 'aydenpate_add_to_cart',
-            security: aydenpate_data.nonce, // Nonce for security
+            security: aydenpate_data.nonce,
             pasta: $('input[name="pasta"]:checked').val(),
             sauce: $('input[name="sauce"]:checked').val(),
             cheese: $('input[name="cheese"]:checked').val(),
@@ -56,16 +61,24 @@ jQuery(document).ready(function($) {
             delivery_date: $('#delivery-date').val(),
             delivery_time: $('#delivery-time').val(),
             customer_address: $('#customer-address').val(),
-            customer_phone: $('#customer-phone').val(),
+            customer_phone: $('#customer-phone').val()
         };
 
-        $.post(aydenpate_data.ajax_url, formData, function(response) {
+        $.post(aydenpate_data.ajax_url, data, function(response) {
             if (response.success) {
-                alert('Produit ajouté au panier');
-                window.location.href = '/cart';
+                alert('Product added to cart!');
             } else {
-                alert('Erreur lors de l\'ajout au panier: ' + response.data.message);
+                alert(response.data.message);
             }
         });
+    });
+
+    $('#remove-selection').on('click', function() {
+        $('input[type="radio"]').prop('checked', false);
+        $('#summary-details').html('');
+        $('#delivery-details').hide();
+        $('#order-summary').hide();
+        currentStep = 1;
+        showStep(currentStep);
     });
 });

@@ -56,6 +56,7 @@ final class AydenPate {
             'cheese_options' => $this->get_options_with_images('cheese_options'),
             'dessert_options' => $this->get_options_with_images('dessert_options'),
             'drink_options' => $this->get_options_with_images('drink_options'),
+            'nonce' => wp_create_nonce('aydenpate_nonce'),
             'order_id' => isset($_GET['order_id']) ? sanitize_text_field($_GET['order_id']) : '',
         ));
         wp_enqueue_style('aydenpate-style', plugin_dir_url(__FILE__) . 'css/aydenpate.css');
@@ -63,7 +64,8 @@ final class AydenPate {
     }
 
     private function get_options_with_images($option_name) {
-        $options = explode("\n", get_option('aydenpate_settings')[$option_name]);
+        $settings = get_option('aydenpate_settings');
+        $options = isset($settings[$option_name]) ? explode("\n", $settings[$option_name]) : [];
         $result = array();
 
         foreach ($options as $option) {
@@ -185,6 +187,7 @@ final class AydenPate {
                     <h3>Résumé de la commande :</h3>
                     <div id="summary-details"></div>
                     <button type="button" id="add-to-cart">Ajouter au panier</button>
+                    <button type="button" id="remove-selection">Supprimer sélection</button>
                 </div>
             </form>
         </div>
@@ -258,3 +261,4 @@ final class AydenPate {
 }
 
 new AydenPate();
+?>
