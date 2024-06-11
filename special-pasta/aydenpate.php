@@ -61,6 +61,8 @@ final class AydenPate {
         ));
         wp_enqueue_style('aydenpate-style', plugin_dir_url(__FILE__) . 'css/aydenpate.css');
         wp_enqueue_script('aydenpate-tracking', plugin_dir_url(__FILE__) . 'js/aydenpate-tracking.js', array('jquery', 'google-maps'), self::VERSION, true);
+        error_log('Script URL: ' . plugin_dir_url(__FILE__) . 'js/aydenpate.js');
+        error_log('Style URL: ' . plugin_dir_url(__FILE__) . 'css/aydenpate.css');
     }
 
     private function get_options_with_images($option_name) {
