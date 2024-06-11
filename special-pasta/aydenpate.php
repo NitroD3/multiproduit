@@ -51,18 +51,16 @@ final class AydenPate {
         wp_enqueue_script('aydenpate-script', plugin_dir_url(__FILE__) . 'js/aydenpate.js', array('jquery', 'google-maps'), self::VERSION, true);
         wp_localize_script('aydenpate-script', 'aydenpate_data', array(
             'ajax_url' => admin_url('admin-ajax.php'),
-            'pasta_options' => $this->get_options_with_images('pasta_options'),
-            'sauce_options' => $this->get_options_with_images('sauce_options'),
-            'cheese_options' => $this->get_options_with_images('cheese_options'),
-            'dessert_options' => $this->get_options_with_images('dessert_options'),
-            'drink_options' => $this->get_options_with_images('drink_options'),
+            'pasta_options' => $this->get_products_by_category('pasta'),
+            'sauce_options' => $this->get_products_by_category('sauce'),
+            'cheese_options' => $this->get_products_by_category('cheese'),
+            'dessert_options' => $this->get_products_by_category('dessert'),
+            'drink_options' => $this->get_products_by_category('drink'),
             'nonce' => wp_create_nonce('aydenpate_nonce'),
             'order_id' => isset($_GET['order_id']) ? sanitize_text_field($_GET['order_id']) : '',
         ));
         wp_enqueue_style('aydenpate-style', plugin_dir_url(__FILE__) . 'css/aydenpate.css');
         wp_enqueue_script('aydenpate-tracking', plugin_dir_url(__FILE__) . 'js/aydenpate-tracking.js', array('jquery', 'google-maps'), self::VERSION, true);
-        error_log('Script URL: ' . plugin_dir_url(__FILE__) . 'js/aydenpate.js');
-        error_log('Style URL: ' . plugin_dir_url(__FILE__) . 'css/aydenpate.css');
     }
 
     private function get_options_with_images($option_name) {
@@ -90,8 +88,51 @@ final class AydenPate {
             'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'),
             'has_archive' => true,
             'show_in_menu' => 'aydenpate',
+            'taxonomies' => array('pasta_category'), // Utilisation de la nouvelle taxonomie
+        ));
+
+        // Enregistrer la taxonomie personnalisée
+        register_taxonomy('pasta_category', 'product', array(
+            'labels' => array(
+                'name' => __('Pasta Categories', 'aydenpate'),
+                'singular_name' => __('Pasta Category', 'aydenpate')
+            ),
+            'hierarchical' => true,
+            'show_admin_column' => true,
+            'show_ui' => true,
+            'query_var' => true,
+            'rewrite' => array('slug' => 'pasta-category'),
         ));
     }
+
+    private function get_products_by_category($category_slug) {
+        $args = array(
+            'post_type' => 'product',
+            'tax_query' => array(
+                array(
+                    'taxonomy' => 'pasta_category', // Utilisez 'category' si vous utilisez la taxonomie par défaut
+                    'field' => 'slug',
+                    'terms' => $category_slug,
+                ),
+            ),
+        );
+        $query = new WP_Query($args);
+        $products = array();
+
+        if ($query->have_posts()) {
+            while ($query->have_posts()) {
+                $query->the_post();
+                $products[] = array(
+                    'name' => get_the_title(),
+                    'image' => get_the_post_thumbnail_url(),
+                );
+            }
+            wp_reset_postdata();
+        }
+
+        return $products;
+    }
+
 
     public function register_elementor_widgets() {
         require_once(plugin_dir_path(__FILE__) . 'widgets/option-widget.php');
