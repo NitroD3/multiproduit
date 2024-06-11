@@ -57,6 +57,7 @@ jQuery(document).ready(function($) {
     });
 
     $('#add-to-cart').on('click', function() {
+        console.log('Add to cart button clicked');
         let data = {
             action: 'aydenpate_add_to_cart',
             security: aydenpate_data.nonce,
@@ -70,8 +71,10 @@ jQuery(document).ready(function($) {
             customer_address: $('#customer-address').val(),
             customer_phone: $('#customer-phone').val()
         };
+        console.log('Sending AJAX request with data:', data);
 
         $.post(aydenpate_data.ajax_url, data, function(response) {
+            console.log('Received AJAX response:', response);
             if (response.success) {
                 alert('Product added to cart!');
             } else {

@@ -239,11 +239,14 @@ final class AydenPate {
     }
 
     public function add_to_cart() {
+        error_log('add_to_cart function called'); // Log when the function is called
+
         check_ajax_referer('aydenpate_nonce', 'security'); // Nonce check for security
 
         $product_id = $this->get_product_id_based_on_order($_POST);
 
         if (!$product_id) {
+            error_log('Product ID not set.'); // Log when product ID is not set
             wp_send_json_error(array('message' => 'Product ID not set.'));
         }
 
@@ -264,8 +267,10 @@ final class AydenPate {
         $cart_item_key = WC()->cart->add_to_cart($product_id, $quantity, 0, array(), $cart_item_data);
 
         if ($cart_item_key) {
+            error_log('Product added to cart successfully'); // Log when product is added to cart successfully
             wp_send_json_success();
         } else {
+            error_log('Error adding product to cart.'); // Log when there is an error adding product to cart
             wp_send_json_error(array('message' => 'Error adding product to cart.'));
         }
     }
