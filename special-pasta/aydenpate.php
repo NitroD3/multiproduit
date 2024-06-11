@@ -44,6 +44,9 @@ final class AydenPate {
 
         // Endpoint for updating driver location
         add_action('wp_ajax_update_driver_location', array($this, 'update_driver_location'));
+
+        // Set the product ID
+        update_option('aydenpate_product_id', YOUR_PRODUCT_ID);
     }
 
     public function enqueue_scripts() {
