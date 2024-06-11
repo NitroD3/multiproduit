@@ -3,7 +3,7 @@
 Plugin Name: AydenPate
 Description: Plugin pour composer des plats de pâtes avec des choix de sauces, suppléments, boissons, etc. Modifiable avec Elementor.
 Version: 1.0.2
-Author: tourak adnan
+Author: Tourak Adnan
 URL: https://tourak-digital.com/
 Snapchat: https://snapchat.com/add/ayden3.0of
 */
@@ -67,7 +67,9 @@ final class AydenPate {
         $result = array();
 
         foreach ($options as $option) {
-            list($name, $image) = explode('|', $option);
+            $parts = explode('|', $option);
+            $name = $parts[0];
+            $image = isset($parts[1]) ? $parts[1] : ''; // Set $image to an empty string if it doesn't exist
             $result[] = array('name' => $name, 'image' => $image);
         }
 
@@ -110,7 +112,7 @@ final class AydenPate {
     public function register_settings() {
         register_setting('aydenpate_settings_group', 'aydenpate_settings');
         add_settings_section('aydenpate_settings_section', 'Settings', null, 'aydenpate');
-        
+
         add_settings_field('pasta_options', 'Pasta Options', array($this, 'render_options_field'), 'aydenpate', 'aydenpate_settings_section', array('option_name' => 'pasta_options'));
         add_settings_field('sauce_options', 'Sauce Options', array($this, 'render_options_field'), 'aydenpate', 'aydenpate_settings_section', array('option_name' => 'sauce_options'));
         add_settings_field('cheese_options', 'Cheese Options', array($this, 'render_options_field'), 'aydenpate', 'aydenpate_settings_section', array('option_name' => 'cheese_options'));
@@ -121,19 +123,25 @@ final class AydenPate {
     public function render_options_field($args) {
         $option_name = $args['option_name'];
         $options = get_option('aydenpate_settings')[$option_name];
-        echo '<textarea name="aydenpate_settings[' . $option_name . ']" rows="5" cols="50">' . esc_textarea($options ?? '') . '</textarea>';
-        echo '<p class="description">Enter each option on a new line. Format: Name|ImageURL</p>';
+        ?>
+        <textarea name="aydenpate_settings[<?php echo esc_attr($option_name); ?>]" rows="5" cols="50"><?php echo esc_textarea($options ?? ''); ?></textarea>
+        <p class="description">Enter each option on a new line. Format: Name|ImageURL</p>
+        <?php
     }
 
     public function settings_page() {
-        echo '<div class="wrap">';
-        echo '<h1>AydenPate Settings</h1>';
-        echo '<form method="post" action="options.php">';
-        settings_fields('aydenpate_settings_group');
-        do_settings_sections('aydenpate');
-        submit_button();
-        echo '</form>';
-        echo '</div>';
+        ?>
+        <div class="wrap">
+            <h1>AydenPate Settings</h1>
+            <form method="post" action="options.php">
+                <?php
+                settings_fields('aydenpate_settings_group');
+                do_settings_sections('aydenpate');
+                submit_button();
+                ?>
+            </form>
+        </div>
+        <?php
     }
 
     public function render_order_page() {
@@ -185,7 +193,13 @@ final class AydenPate {
     }
 
     public function add_to_cart() {
-        $product_id = get_option('aydenpate_product_id'); // You should create this option and set a WooCommerce product ID
+        check_ajax_referer('aydenpate_nonce', 'security'); // Nonce check for security
+
+        $product_id = get_option('aydenpate_product_id');
+        if (!$product_id) {
+            wp_send_json_error(array('message' => 'Product ID not set.'));
+        }
+
         $quantity = 1;
         $custom_data = array(
             'pasta' => sanitize_text_field($_POST['pasta']),
@@ -199,20 +213,19 @@ final class AydenPate {
             'customer_phone' => sanitize_text_field($_POST['customer_phone']),
         );
 
-        $cart_item_data = array(
-            'custom_data' => $custom_data
-        );
-
+        $cart_item_data = array('custom_data' => $custom_data);
         $cart_item_key = WC()->cart->add_to_cart($product_id, $quantity, 0, array(), $cart_item_data);
 
         if ($cart_item_key) {
             wp_send_json_success();
         } else {
-            wp_send_json_error();
+            wp_send_json_error(array('message' => 'Error adding product to cart.'));
         }
     }
 
     public function get_delivery_status() {
+        check_ajax_referer('aydenpate_nonce', 'security'); // Nonce check for security
+
         $order_id = intval($_POST['order_id']);
         $order = wc_get_order($order_id);
 
@@ -225,11 +238,13 @@ final class AydenPate {
                 'location' => $driver_location
             ));
         } else {
-            wp_send_json_error();
+            wp_send_json_error(array('message' => 'Invalid order ID.'));
         }
     }
 
     public function update_driver_location() {
+        check_ajax_referer('aydenpate_nonce', 'security'); // Nonce check for security
+
         $order_id = intval($_POST['order_id']);
         $location = sanitize_text_field($_POST['location']);
 
@@ -237,10 +252,9 @@ final class AydenPate {
             update_post_meta($order_id, '_driver_location', $location);
             wp_send_json_success();
         } else {
-            wp_send_json_error();
+            wp_send_json_error(array('message' => 'Invalid data.'));
         }
     }
 }
 
 new AydenPate();
-?>

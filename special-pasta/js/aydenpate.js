@@ -47,6 +47,7 @@ jQuery(document).ready(function($) {
     $('#add-to-cart').on('click', function() {
         var formData = {
             action: 'aydenpate_add_to_cart',
+            security: aydenpate_data.nonce, // Nonce for security
             pasta: $('input[name="pasta"]:checked').val(),
             sauce: $('input[name="sauce"]:checked').val(),
             cheese: $('input[name="cheese"]:checked').val(),
@@ -63,7 +64,7 @@ jQuery(document).ready(function($) {
                 alert('Produit ajouté au panier');
                 window.location.href = '/cart';
             } else {
-                alert('Erreur lors de l\'ajout au panier');
+                alert('Erreur lors de l\'ajout au panier: ' + response.data.message);
             }
         });
     });
