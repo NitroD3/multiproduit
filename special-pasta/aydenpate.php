@@ -241,7 +241,8 @@ final class AydenPate {
     public function add_to_cart() {
         check_ajax_referer('aydenpate_nonce', 'security'); // Nonce check for security
 
-        $product_id = get_option('aydenpate_product_id');
+        $product_id = $this->get_product_id_based_on_order($_POST);
+
         if (!$product_id) {
             wp_send_json_error(array('message' => 'Product ID not set.'));
         }

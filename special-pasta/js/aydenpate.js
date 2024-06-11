@@ -12,10 +12,17 @@ jQuery(document).ready(function($) {
     }
 
     function showStep(step) {
+        // Supprimez l'attribut 'required' de tous les champs de formulaire
+        $('.order-step').find('input,select,textarea').removeAttr('required');
+
+        // Affichez l'étape actuelle
         $('.order-step').hide();
         $(`#step-${step}`).show();
-    }
 
+        // Ajoutez l'attribut 'required' aux champs de formulaire de l'étape actuelle
+        $(`#step-${step}`).find('input,select,textarea').attr('required', 'required');
+    }
+    
     function updateSummary() {
         let summaryHtml = `<p>Pâtes: ${$('input[name="pasta"]:checked').val()}</p>
                            <p>Sauce: ${$('input[name="sauce"]:checked').val()}</p>
