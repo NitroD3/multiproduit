@@ -1,0 +1,96 @@
+/* Couleurs primaires basées sur le logo */
+:root {
+    --primary-color: #6A8B46;
+    --secondary-color: #D4B02F;
+    --background-color: #F6F3E6;
+    --text-color: #6A8B46;
+}
+
+/* Style général du conteneur */
+.elementor-widget-container {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.elementor-widget-container h2 {
+    color: var(--primary-color);
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.elementor-widget-container h3 {
+    color: var(--secondary-color);
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* Style pour les étapes de la commande */
+.elementor-widget-container .order-step {
+    display: none;
+}
+
+.elementor-widget-container .order-step.active {
+    display: block;
+}
+
+/* Style pour les options */
+.elementor-widget-container .option {
+    display: inline-block;
+    margin: 10px;
+    text-align: center;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.elementor-widget-container .option:hover {
+    transform: scale(1.05);
+}
+
+.elementor-widget-container .option img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.elementor-widget-container .option label {
+    display: block;
+    padding: 10px;
+    background-color: var(--primary-color);
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Style pour le résumé de la commande */
+.elementor-widget-container #order-summary {
+    display: none;
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.elementor-widget-container #summary-details {
+    margin-bottom: 20px;
+}
+
+.elementor-widget-container #add-to-cart {
+    background-color: var(--secondary-color);
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.elementor-widget-container #add-to-cart:hover {
+    background-color: #b38924;
+}
