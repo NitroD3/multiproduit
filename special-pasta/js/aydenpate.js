@@ -81,4 +81,30 @@ jQuery(document).ready(function($) {
         currentStep = 1;
         showStep(currentStep);
     });
+
+    // Ajoutez un bouton "Précédent" et "Suivant" à chaque étape
+    $('.order-step').each(function(index, step) {
+        if (index > 0) { // Pas de bouton "Précédent" pour la première étape
+            $(step).append('<button class="prev-step">Précédent</button>');
+        }
+        if (index < 4) { // Pas de bouton "Suivant" pour la dernière étape
+            $(step).append('<button class="next-step">Suivant</button>');
+        }
+    });
+
+    // Lorsqu'un utilisateur clique sur le bouton "Précédent", affichez l'étape précédente
+    $('.prev-step').on('click', function() {
+        if (currentStep > 1) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    });
+
+    // Lorsqu'un utilisateur clique sur le bouton "Suivant", affichez l'étape suivante
+    $('.next-step').on('click', function() {
+        if (currentStep < 5) {
+            currentStep++;
+            showStep(currentStep);
+        }
+    });
 });
