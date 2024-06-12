@@ -25,11 +25,17 @@ jQuery(document).ready(function($) {
     $('#next-step').on('click', function() {
         if (currentStep < 5) {
             let selectedOption = $('#step-' + currentStep + ' input:checked').next('label').text();
+            if (!selectedOption) {
+                selectedOption = $('#step-' + currentStep + ' input:checked').val();
+            }
             $('#order-details').append('<li>' + selectedOption + '</li>');
             currentStep++;
             showStep(currentStep);
         } else if (currentStep === 5) {
             let selectedOption = $('#step-' + currentStep + ' input:checked').next('label').text();
+            if (!selectedOption) {
+                selectedOption = $('#step-' + currentStep + ' input:checked').val();
+            }
             $('#order-details').append('<li>' + selectedOption + '</li>');
         }
     });
@@ -80,4 +86,6 @@ jQuery(document).ready(function($) {
     $.each(aydenpate_data.drink_options, function(index, option) {
         $('#drink-options').append('<input type="radio" name="drink" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
     });
+
+    showStep(1);
 });
