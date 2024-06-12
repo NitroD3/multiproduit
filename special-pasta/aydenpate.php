@@ -106,6 +106,9 @@ final class AydenPate {
                 $products[] = array(
                     'name' => get_the_title(),
                     'image' => get_the_post_thumbnail_url(),
+                    'price' => get_post_meta(get_the_ID(), '_price', true), // Ajoutez cette ligne
+                    'description' => get_the_excerpt(), // Ajoutez cette ligne
+                    'id' => get_the_ID(),
                 );
             }
             wp_reset_postdata();

@@ -90,23 +90,23 @@ jQuery(document).ready(function($) {
     });
 
     $.each(aydenpate_data.pasta_options, function(index, option) {
-        $('#pasta-options').append('<input type="radio" name="pasta" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
+        $('#pasta-options').append('<input type="radio" name="pasta" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '</span><br><span>Description : ' + option.description + '</span><br>');
     });
 
     $.each(aydenpate_data.sauce_options, function(index, option) {
-        $('#sauce-options').append('<input type="radio" name="sauce" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
+        $('#sauce-options').append('<input type="radio" name="sauce" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '</span><br><span>Description : ' + option.description + '</span><br>');
     });
 
     $.each(aydenpate_data.cheese_options, function(index, option) {
-        $('#cheese-options').append('<input type="radio" name="cheese" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
+        $('#cheese-options').append('<input type="radio" name="cheese" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '</span><br><span>Description : ' + option.description + '</span><br>');
     });
 
     $.each(aydenpate_data.dessert_options, function(index, option) {
-        $('#dessert-options').append('<input type="radio" name="dessert" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
+        $('#dessert-options').append('<input type="radio" name="dessert" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '</span><br><span>Description : ' + option.description + '</span><br>');
     });
 
     $.each(aydenpate_data.drink_options, function(index, option) {
-        $('#drink-options').append('<input type="radio" name="drink" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
+        $('#drink-options').append('<input type="radio" name="drink" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '</span><br><span>Description : ' + option.description + '</span><br>');
     });
 
     showStep(1);
