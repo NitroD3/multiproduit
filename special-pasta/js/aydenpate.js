@@ -2,28 +2,23 @@ jQuery(document).ready(function($) {
     let currentStep = 1;
 
     function showStep(step) {
-        $('.order-step').hide();
+    $('.order-step').hide();
+    if (step <= 5) {
         $('#step-' + step).show();
-        if (step === 1) {
-            $('#next-step').show().text('Suivant');
-            $('#submit-order').hide();
-            $('#delivery-details').hide();
-            $('#order-summary').hide();
-        } else if (step > 1 && step < 5) {
-            $('#next-step').show().text('Suivant');
-            $('#submit-order').hide();
-            $('#delivery-details').hide();
-            $('#order-summary').hide();
-        } else {
-            $('#next-step').hide();
-            $('#submit-order').show();
-            $('#delivery-details').show();
-            $('#order-summary').show();
-        }
+        $('#next-step').show().text('Suivant');
+        $('#submit-order').hide();
+        $('#delivery-details').hide();
+        $('#order-summary').hide();
+    } else {
+        $('#next-step').hide();
+        $('#submit-order').show();
+        $('#delivery-details').show();
+        $('#order-summary').show();
     }
+}
 
     $('#next-step').on('click', function() {
-        if (currentStep < 5) {
+        if (currentStep < 6) {
             let selectedOption = $('#step-' + currentStep + ' input:checked').next('label').text();
             if (!selectedOption) {
                 selectedOption = $('#step-' + currentStep + ' input:checked').val();
@@ -31,12 +26,6 @@ jQuery(document).ready(function($) {
             $('#order-details').append('<li>' + selectedOption + '</li>');
             currentStep++;
             showStep(currentStep);
-        } else if (currentStep === 5) {
-            let selectedOption = $('#step-' + currentStep + ' input:checked').next('label').text();
-            if (!selectedOption) {
-                selectedOption = $('#step-' + currentStep + ' input:checked').val();
-            }
-            $('#order-details').append('<li>' + selectedOption + '</li>');
         }
     });
 
