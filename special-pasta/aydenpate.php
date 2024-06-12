@@ -73,6 +73,7 @@ final class AydenPate {
             'has_archive' => true,
             'rewrite' => array('slug' => 'products'),
             'supports' => array('title', 'editor', 'thumbnail'),
+            'show_in_menu' => true,  // Ajoutez cette ligne
         ));
 
         register_taxonomy('pasta_category', 'product', array(
