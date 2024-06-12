@@ -1,5 +1,6 @@
 jQuery(document).ready(function($) {
     let currentStep = 1;
+    let previousSelections = {};
 
     function showStep(step) {
         $('.order-step').hide();
@@ -28,7 +29,16 @@ jQuery(document).ready(function($) {
             if (!selectedOption) {
                 selectedOption = $('#step-' + currentStep + ' input:checked').val();
             }
-            $('#order-details').append('<li>' + selectedOption + ' <button type="button" class="edit-step" data-step="' + currentStep + '">Modifier</button></li>');
+
+            // If there was a previous selection for this step, remove it
+            if (previousSelections[currentStep]) {
+                $('#order-details li[data-step="' + currentStep + '"]').remove();
+            }
+
+            // Add the new selection and store it as the previous selection for this step
+            $('#order-details').append('<li data-step="' + currentStep + '">' + selectedOption + ' <button type="button" class="edit-step" data-step="' + currentStep + '">Modifier</button></li>');
+            previousSelections[currentStep] = selectedOption;
+
             currentStep++;
             showStep(currentStep);
         }
@@ -36,14 +46,12 @@ jQuery(document).ready(function($) {
 
     $('#prev-step').on('click', function() {
         currentStep--;
-        $('#order-details li:last-child').remove();
         showStep(currentStep);
     });
 
     $(document).on('click', '.edit-step', function() {
         let step = $(this).data('step');
         currentStep = step;
-        $('#order-details li:gt(' + (step - 1) + ')').remove();
         showStep(step);
     });
 
