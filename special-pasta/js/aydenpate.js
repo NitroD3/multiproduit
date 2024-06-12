@@ -29,6 +29,7 @@ jQuery(document).ready(function($) {
             if (!selectedOption) {
                 selectedOption = $('#step-' + currentStep + ' input:checked').val();
             }
+            let selectedPrice = $('#step-' + currentStep + ' input:checked').nextAll('span:contains("Prix")').text();
 
             // If there was a previous selection for this step, remove it
             if (previousSelections[currentStep]) {
@@ -36,7 +37,7 @@ jQuery(document).ready(function($) {
             }
 
             // Add the new selection and store it as the previous selection for this step
-            $('#order-details').append('<li data-step="' + currentStep + '">' + selectedOption + ' <button type="button" class="edit-step" data-step="' + currentStep + '">Modifier</button></li>');
+            $('#order-details').append('<li data-step="' + currentStep + '">' + selectedOption + ' - ' + selectedPrice + ' <button type="button" class="edit-step" data-step="' + currentStep + '">Modifier</button></li>');
             previousSelections[currentStep] = selectedOption;
 
             currentStep++;
