@@ -132,3 +132,17 @@
 #aydenpate-tracking-widget #status {
     margin-top: 10px;
 }
+
+.elementor-widget-container .option img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.elementor-widget-container .option label {
+    display: block;
+    padding: 10px;
+    cursor: pointer;
+}
+
