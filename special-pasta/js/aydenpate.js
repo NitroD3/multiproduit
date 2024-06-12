@@ -1,6 +1,5 @@
 jQuery(document).ready(function($) {
     let currentStep = 1;
-    let selectedOptions = [];
 
     function showStep(step) {
         $('.order-step').hide();
@@ -26,15 +25,9 @@ jQuery(document).ready(function($) {
     $('#next-step').on('click', function() {
         if (currentStep < 5) {
             let selectedOption = $('#step-' + currentStep + ' input:checked').next('label').text();
-            selectedOptions.push(selectedOption); // Ajoutez l'option sélectionnée au tableau
+            $('#order-details').append('<li>' + selectedOption + '</li>');
             currentStep++;
             showStep(currentStep);
-        } else {
-            // Lorsque l'utilisateur atteint l'étape 5, ajoutez toutes les options sélectionnées à la liste
-            $('#order-details').empty(); // Videz la liste au cas où l'utilisateur reviendrait en arrière
-            $.each(selectedOptions, function(index, option) {
-                $('#order-details').append('<li>' + option + '</li>');
-            });
         }
     });
 
