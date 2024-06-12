@@ -43,6 +43,15 @@ jQuery(document).ready(function($) {
     $('#aydenpate-order-form').on('submit', function(e) {
         e.preventDefault();
 
+        // Validation
+        const deliveryAddress = $('#delivery-address').val();
+        const deliveryPhone = $('#delivery-phone').val();
+
+        if (!deliveryAddress || !deliveryPhone) {
+            alert('Veuillez remplir tous les champs obligatoires.');
+            return;
+        }
+
         let formData = {
             action: 'aydenpate_add_to_cart',
             security: aydenpate_data.nonce,
@@ -51,9 +60,9 @@ jQuery(document).ready(function($) {
             cheese: $('#step-3 input:checked').val(),
             dessert: $('#step-4 input:checked').val(),
             drink: $('#step-5 input:checked').val(),
-            delivery_address: $('#delivery-address').val(),
+            delivery_address: deliveryAddress,
             delivery_instructions: $('#delivery-instructions').val(),
-            delivery_phone: $('#delivery-phone').val()
+            delivery_phone: deliveryPhone
         };
 
         $.post(aydenpate_data.ajax_url, formData, function(response) {
