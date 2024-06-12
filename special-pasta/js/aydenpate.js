@@ -7,12 +7,15 @@ jQuery(document).ready(function($) {
         if (step === 1) {
             $('#next-step').show().text('Suivant');
             $('#submit-order').hide();
+            $('#delivery-details').hide();
         } else if (step > 1 && step < 5) {
             $('#next-step').show().text('Suivant');
             $('#submit-order').hide();
+            $('#delivery-details').hide();
         } else {
             $('#next-step').hide();
             $('#submit-order').show();
+            $('#delivery-details').show();
         }
     }
 
