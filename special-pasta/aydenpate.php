@@ -197,6 +197,10 @@ final class AydenPate {
                 </div>
                 <div id="delivery-details" style="display: none;">
                     <h3>Détails de livraison</h3>
+                    <div id="order-summary" style="display: none;">
+                        <h3>Récapitulatif de la commande</h3>
+                        <ul id="order-details"></ul>
+                    </div>
                     <input type="text" id="delivery-address" name="delivery_address" placeholder="Adresse de livraison" required>
                     <input type="text" id="delivery-instructions" name="delivery_instructions" placeholder="Instructions de livraison">
                     <input type="text" id="delivery-phone" name="delivery_phone" placeholder="Numéro de téléphone" required>

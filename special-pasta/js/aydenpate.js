@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-    var currentStep = 1;
+    let currentStep = 1;
 
     function showStep(step) {
         $('.order-step').hide();
@@ -8,19 +8,24 @@ jQuery(document).ready(function($) {
             $('#next-step').show().text('Suivant');
             $('#submit-order').hide();
             $('#delivery-details').hide();
+            $('#order-summary').hide();
         } else if (step > 1 && step < 5) {
             $('#next-step').show().text('Suivant');
             $('#submit-order').hide();
             $('#delivery-details').hide();
+            $('#order-summary').hide();
         } else {
             $('#next-step').hide();
             $('#submit-order').show();
             $('#delivery-details').show();
+            $('#order-summary').show();
         }
     }
 
     $('#next-step').on('click', function() {
         if (currentStep < 5) {
+            let selectedOption = $('#step-' + currentStep + ' input:checked').val();
+            $('#order-details').append('<li>' + selectedOption + '</li>');
             currentStep++;
             showStep(currentStep);
         }
@@ -29,7 +34,7 @@ jQuery(document).ready(function($) {
     $('#aydenpate-order-form').on('submit', function(e) {
         e.preventDefault();
 
-        var formData = {
+        let formData = {
             action: 'aydenpate_add_to_cart',
             security: aydenpate_data.nonce,
             pasta: $('#step-1 input:checked').val(),
