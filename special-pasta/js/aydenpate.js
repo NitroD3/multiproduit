@@ -1,116 +1,72 @@
 jQuery(document).ready(function($) {
-    function displayOptions(step, options) {
-        let html = '';
-        options.forEach(option => {
-            html += `<label class="option-label">
-                        <input type="radio" name="${step}" value="${option.name}">
-                        <img src="${option.image}" alt="${option.name}" class="option-image">
-                        <span>${option.name}</span>
-                    </label>`;
-        });
-        $(`#${step}-options`).html(html);
-    }
+    var currentStep = 1;
 
     function showStep(step) {
-        // Supprimez l'attribut 'required' de tous les champs de formulaire
-        $('.order-step').find('input,select,textarea').removeAttr('required');
-
-        // Affichez l'étape actuelle
         $('.order-step').hide();
-        $(`#step-${step}`).show();
-
-        // Ajoutez l'attribut 'required' aux champs de formulaire de l'étape actuelle
-        $(`#step-${step}`).find('input,select,textarea').attr('required', 'required');
-    }
-    
-    function updateSummary() {
-        let summaryHtml = `<p>Pâtes: ${$('input[name="pasta"]:checked').val()}</p>
-                           <p>Sauce: ${$('input[name="sauce"]:checked').val()}</p>
-                           <p>Gratiné: ${$('input[name="cheese"]:checked').val()}</p>`;
-        if ($('input[name="dessert"]:checked').val()) {
-            summaryHtml += `<p>Dessert: ${$('input[name="dessert"]:checked').val()}</p>`;
+        $('#step-' + step).show();
+        if (step === 1) {
+            $('#next-step').show().text('Suivant');
+            $('#submit-order').hide();
+        } else if (step > 1 && step < 5) {
+            $('#next-step').show().text('Suivant');
+            $('#submit-order').hide();
+        } else {
+            $('#next-step').hide();
+            $('#submit-order').show();
         }
-        if ($('input[name="drink"]:checked').val()) {
-            summaryHtml += `<p>Boisson: ${$('input[name="drink"]:checked').val()}</p>`;
-        }
-        $('#summary-details').html(summaryHtml);
     }
 
-    displayOptions('pasta', aydenpate_data.pasta_options);
-    displayOptions('sauce', aydenpate_data.sauce_options);
-    displayOptions('cheese', aydenpate_data.cheese_options);
-    displayOptions('dessert', aydenpate_data.dessert_options);
-    displayOptions('drink', aydenpate_data.drink_options);
-
-    let currentStep = 1;
-    showStep(currentStep);
-
-    $('input[type="radio"]').on('change', function() {
-        updateSummary();
+    $('#next-step').on('click', function() {
         if (currentStep < 5) {
             currentStep++;
             showStep(currentStep);
-        } else {
-            $('#delivery-details').show();
-            $('#order-summary').show();
         }
     });
 
-    $('#add-to-cart').on('click', function() {
-        console.log('Add to cart button clicked');
-        let data = {
+    $('#aydenpate-order-form').on('submit', function(e) {
+        e.preventDefault();
+
+        var formData = {
             action: 'aydenpate_add_to_cart',
             security: aydenpate_data.nonce,
-            pasta: $('input[name="pasta"]:checked').val(),
-            sauce: $('input[name="sauce"]:checked').val(),
-            cheese: $('input[name="cheese"]:checked').val(),
-            dessert: $('input[name="dessert"]:checked').val(),
-            drink: $('input[name="drink"]:checked').val(),
-            delivery_date: $('#delivery-date').val(),
-            delivery_time: $('#delivery-time').val(),
-            customer_address: $('#customer-address').val(),
-            customer_phone: $('#customer-phone').val()
+            pasta: $('#step-1 input:checked').val(),
+            sauce: $('#step-2 input:checked').val(),
+            cheese: $('#step-3 input:checked').val(),
+            dessert: $('#step-4 input:checked').val(),
+            drink: $('#step-5 input:checked').val(),
+            delivery_address: $('#delivery-address').val(),
+            delivery_instructions: $('#delivery-instructions').val(),
+            delivery_phone: $('#delivery-phone').val()
         };
-        console.log('Sending AJAX request with data:', data);
 
-        $.post(aydenpate_data.ajax_url, data, function(response) {
-            console.log('Received AJAX response:', response);
+        $.post(aydenpate_data.ajax_url, formData, function(response) {
             if (response.success) {
-                alert('Product added to cart!');
+                alert('Produit ajouté au panier');
+                window.location.href = '/cart/';
             } else {
-                alert(response.data.message);
+                alert('Erreur lors de l\'ajout au panier');
             }
         });
     });
 
-    $('#remove-selection').on('click', function() {
-        $('input[type="radio"]').prop('checked', false);
-        $('#summary-details').html('');
-        $('#delivery-details').hide();
-        $('#order-summary').hide();
-        currentStep = 1;
-        showStep(currentStep);
+    // Load options
+    $.each(aydenpate_data.pasta_options, function(index, option) {
+        $('#pasta-options').append('<input type="radio" name="pasta" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
     });
 
-    // Ajoutez un bouton "Précédent" à chaque étape
-    $('.order-step').each(function(index, step) {
-        if (index > 0) { // Pas de bouton "Précédent" pour la première étape
-            $(step).append('<button class="prev-step">Précédent</button>');
-        }
+    $.each(aydenpate_data.sauce_options, function(index, option) {
+        $('#sauce-options').append('<input type="radio" name="sauce" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
     });
 
-    // Lorsqu'un utilisateur clique sur le bouton "Précédent", affichez l'étape précédente
-    $('.prev-step').on('click', function() {
-        if (currentStep > 1) {
-            currentStep--;
-            showStep(currentStep);
-        }
+    $.each(aydenpate_data.cheese_options, function(index, option) {
+        $('#cheese-options').append('<input type="radio" name="cheese" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
     });
 
-    // Ajoutez une option "Aucun" à chaque étape
-    $('.order-step').each(function(index, step) {
-        if (index > 0) { // Pas d'option "Aucun" pour la première étape
-            $(step).find('.options').append('<label class="option-label"><input type="radio" name="' + step.id + '" value="Aucun"><span>Aucun</span></label>');
-        }
+    $.each(aydenpate_data.dessert_options, function(index, option) {
+        $('#dessert-options').append('<input type="radio" name="dessert" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
+    });
+
+    $.each(aydenpate_data.drink_options, function(index, option) {
+        $('#drink-options').append('<input type="radio" name="drink" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
     });
 });

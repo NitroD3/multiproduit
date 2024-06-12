@@ -94,3 +94,41 @@
 .elementor-widget-container #add-to-cart:hover {
     background-color: #b38924;
 }
+
+.aydenpate-option-widget {
+    padding: 15px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+.order-step {
+    margin-bottom: 20px;
+}
+
+.order-step img {
+    max-width: 100px;
+    display: block;
+}
+
+#aydenpate-order-form {
+    max-width: 600px;
+    margin: auto;
+}
+
+#aydenpate-order-form h3 {
+    margin-top: 20px;
+}
+
+#aydenpate-order-form button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 20px;
+}
+
+#aydenpate-tracking-widget {
+    text-align: center;
+}
+
+#aydenpate-tracking-widget #status {
+    margin-top: 10px;
+}

@@ -1,21 +1,25 @@
 <?php
 namespace Elementor;
 
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
 class AydenPate_Tracking_Widget extends Widget_Base {
     public function get_name() {
         return 'aydenpate_tracking_widget';
     }
 
     public function get_title() {
-        return __('Tracking Widget', 'aydenpate');
+        return __('AydenPate Tracking', 'aydenpate');
     }
 
     public function get_icon() {
-        return 'eicon-location';
+        return 'eicon-map-pin';
     }
 
     public function get_categories() {
-        return ['basic'];
+        return ['general'];
     }
 
     protected function _register_controls() {
@@ -28,11 +32,13 @@ class AydenPate_Tracking_Widget extends Widget_Base {
         );
 
         $this->add_control(
-            'title',
+            'order_id',
             [
-                'label' => __('Title', 'aydenpate'),
+                'label' => __('Order ID', 'aydenpate'),
                 'type' => \Elementor\Controls_Manager::TEXT,
-                'default' => __('Suivi de livraison', 'aydenpate'),
+                'input_type' => 'number',
+                'default' => 0,
+                'placeholder' => __('Enter Order ID', 'aydenpate'),
             ]
         );
 
@@ -41,26 +47,20 @@ class AydenPate_Tracking_Widget extends Widget_Base {
 
     protected function render() {
         $settings = $this->get_settings_for_display();
-        echo '<div class="aydenpate-tracking-widget">';
-        echo '<h3>' . $settings['title'] . '</h3>';
-        echo '<div id="map" style="width: 100%; height: 400px;"></div>';
-        echo '<p id="delivery-status"></p>';
-        echo '</div>';
+        ?>
+        <div id="aydenpate-tracking-widget" data-order-id="<?php echo esc_attr($settings['order_id']); ?>">
+            <div id="map" style="height: 400px;"></div>
+            <div id="status"></div>
+        </div>
+        <?php
     }
 
     protected function _content_template() {
         ?>
-        <#
-        var title = settings.title;
-        #>
-        <div class="aydenpate-tracking-widget">
-            <h3>{{{ title }}}</h3>
-            <div id="map" style="width: 100%; height: 400px;"></div>
-            <p id="delivery-status"></p>
+        <div id="aydenpate-tracking-widget" data-order-id="{{ settings.order_id }}">
+            <div id="map" style="height: 400px;"></div>
+            <div id="status"></div>
         </div>
         <?php
     }
 }
-
-Plugin::instance()->widgets_manager->register_widget_type(new AydenPate_Tracking_Widget());
-?>

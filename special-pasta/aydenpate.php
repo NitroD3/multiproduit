@@ -63,44 +63,24 @@ final class AydenPate {
         wp_enqueue_script('aydenpate-tracking', plugin_dir_url(__FILE__) . 'js/aydenpate-tracking.js', array('jquery', 'google-maps'), self::VERSION, true);
     }
 
-    private function get_options_with_images($option_name) {
-        $settings = get_option('aydenpate_settings');
-        $options = isset($settings[$option_name]) ? explode("\n", $settings[$option_name]) : [];
-        $result = array();
-
-        foreach ($options as $option) {
-            $parts = explode('|', $option);
-            $name = $parts[0];
-            $image = isset($parts[1]) ? $parts[1] : ''; // Set $image to an empty string if it doesn't exist
-            $result[] = array('name' => $name, 'image' => $image);
-        }
-
-        return $result;
-    }
-
     public function register_custom_post_types() {
         register_post_type('product', array(
             'labels' => array(
-                'name' => __('Products', 'aydenpate'),
-                'singular_name' => __('Product', 'aydenpate')
+                'name' => 'Products',
+                'singular_name' => 'Product',
             ),
             'public' => true,
-            'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'),
             'has_archive' => true,
-            'show_in_menu' => 'aydenpate',
-            'taxonomies' => array('pasta_category'), // Utilisation de la nouvelle taxonomie
+            'rewrite' => array('slug' => 'products'),
+            'supports' => array('title', 'editor', 'thumbnail'),
         ));
 
-        // Enregistrer la taxonomie personnalisée
         register_taxonomy('pasta_category', 'product', array(
             'labels' => array(
-                'name' => __('Pasta Categories', 'aydenpate'),
-                'singular_name' => __('Pasta Category', 'aydenpate')
+                'name' => 'Pasta Categories',
+                'singular_name' => 'Pasta Category',
             ),
             'hierarchical' => true,
-            'show_admin_column' => true,
-            'show_ui' => true,
-            'query_var' => true,
             'rewrite' => array('slug' => 'pasta-category'),
         ));
     }
@@ -110,7 +90,7 @@ final class AydenPate {
             'post_type' => 'product',
             'tax_query' => array(
                 array(
-                    'taxonomy' => 'pasta_category', // Utilisez 'category' si vous utilisez la taxonomie par défaut
+                    'taxonomy' => 'pasta_category',
                     'field' => 'slug',
                     'terms' => $category_slug,
                 ),
@@ -132,7 +112,6 @@ final class AydenPate {
 
         return $products;
     }
-
 
     public function register_elementor_widgets() {
         require_once(plugin_dir_path(__FILE__) . 'widgets/option-widget.php');
@@ -167,9 +146,9 @@ final class AydenPate {
 
     public function render_options_field($args) {
         $option_name = $args['option_name'];
-        $options = get_option('aydenpate_settings')[$option_name];
+        $options = get_option('aydenpate_settings')[$option_name] ?? '';
         ?>
-        <textarea name="aydenpate_settings[<?php echo esc_attr($option_name); ?>]" rows="5" cols="50"><?php echo esc_textarea($options ?? ''); ?></textarea>
+        <textarea name="aydenpate_settings[<?php echo esc_attr($option_name); ?>]" rows="5" cols="50"><?php echo esc_textarea($options); ?></textarea>
         <p class="description">Enter each option on a new line. Format: Name|ImageURL</p>
         <?php
     }
@@ -217,21 +196,12 @@ final class AydenPate {
                 </div>
                 <div id="delivery-details" style="display: none;">
                     <h3>Détails de livraison</h3>
-                    <label for="delivery-date">Date de livraison :</label>
-                    <input type="date" id="delivery-date" name="delivery_date" required>
-                    <label for="delivery-time">Heure de livraison :</label>
-                    <input type="time" id="delivery-time" name="delivery_time" required>
-                    <label for="customer-address">Adresse :</label>
-                    <input type="text" id="customer-address" name="customer_address" required>
-                    <label for="customer-phone">Numéro de téléphone :</label>
-                    <input type="tel" id="customer-phone" name="customer_phone" required>
+                    <input type="text" id="delivery-address" name="delivery_address" placeholder="Adresse de livraison" required>
+                    <input type="text" id="delivery-instructions" name="delivery_instructions" placeholder="Instructions de livraison">
+                    <input type="text" id="delivery-phone" name="delivery_phone" placeholder="Numéro de téléphone" required>
                 </div>
-                <div id="order-summary" style="display: none;">
-                    <h3>Résumé de la commande :</h3>
-                    <div id="summary-details"></div>
-                    <button type="button" id="add-to-cart">Ajouter au panier</button>
-                    <button type="button" id="remove-selection">Supprimer sélection</button>
-                </div>
+                <button type="button" id="next-step" data-step="1">Suivant</button>
+                <button type="submit" id="submit-order" style="display: none;">Ajouter au panier</button>
             </form>
         </div>
         <?php
@@ -239,75 +209,53 @@ final class AydenPate {
     }
 
     public function add_to_cart() {
-        error_log('add_to_cart function called'); // Log when the function is called
+        check_ajax_referer('aydenpate_nonce', 'security');
 
-        check_ajax_referer('aydenpate_nonce', 'security'); // Nonce check for security
-
-        $product_id = $this->get_product_id_based_on_order($_POST);
-
-        if (!$product_id) {
-            error_log('Product ID not set.'); // Log when product ID is not set
-            wp_send_json_error(array('message' => 'Product ID not set.'));
-        }
-
+        $product_id = 0; // Change this to your product ID or dynamically get it based on user selections
         $quantity = 1;
+
         $custom_data = array(
             'pasta' => sanitize_text_field($_POST['pasta']),
             'sauce' => sanitize_text_field($_POST['sauce']),
             'cheese' => sanitize_text_field($_POST['cheese']),
-            'dessert' => isset($_POST['dessert']) ? sanitize_text_field($_POST['dessert']) : '',
-            'drink' => isset($_POST['drink']) ? sanitize_text_field($_POST['drink']) : '',
-            'delivery_date' => sanitize_text_field($_POST['delivery_date']),
-            'delivery_time' => sanitize_text_field($_POST['delivery_time']),
-            'customer_address' => sanitize_text_field($_POST['customer_address']),
-            'customer_phone' => sanitize_text_field($_POST['customer_phone']),
+            'dessert' => sanitize_text_field($_POST['dessert']),
+            'drink' => sanitize_text_field($_POST['drink']),
+            'delivery_address' => sanitize_text_field($_POST['delivery_address']),
+            'delivery_instructions' => sanitize_text_field($_POST['delivery_instructions']),
+            'delivery_phone' => sanitize_text_field($_POST['delivery_phone']),
         );
 
-        $cart_item_data = array('custom_data' => $custom_data);
-        $cart_item_key = WC()->cart->add_to_cart($product_id, $quantity, 0, array(), $cart_item_data);
+        $cart_item_data = array(
+            'custom_data' => $custom_data,
+        );
 
-        if ($cart_item_key) {
-            error_log('Product added to cart successfully'); // Log when product is added to cart successfully
-            wp_send_json_success();
-        } else {
-            error_log('Error adding product to cart.'); // Log when there is an error adding product to cart
-            wp_send_json_error(array('message' => 'Error adding product to cart.'));
-        }
+        WC()->cart->add_to_cart($product_id, $quantity, 0, array(), $cart_item_data);
+
+        wp_send_json_success();
     }
 
     public function get_delivery_status() {
-        check_ajax_referer('aydenpate_nonce', 'security'); // Nonce check for security
+        check_ajax_referer('aydenpate_nonce', 'security');
 
         $order_id = intval($_POST['order_id']);
-        $order = wc_get_order($order_id);
+        // Assuming you have a function get_order_status() that retrieves the status
+        $status = get_order_status($order_id);
 
-        if ($order) {
-            $delivery_status = get_post_meta($order_id, '_delivery_status', true);
-            $driver_location = get_post_meta($order_id, '_driver_location', true);
-
-            wp_send_json_success(array(
-                'status' => $delivery_status,
-                'location' => $driver_location
-            ));
-        } else {
-            wp_send_json_error(array('message' => 'Invalid order ID.'));
-        }
+        wp_send_json_success(array('status' => $status));
     }
 
     public function update_driver_location() {
-        check_ajax_referer('aydenpate_nonce', 'security'); // Nonce check for security
+        check_ajax_referer('aydenpate_nonce', 'security');
 
         $order_id = intval($_POST['order_id']);
-        $location = sanitize_text_field($_POST['location']);
+        $driver_latitude = sanitize_text_field($_POST['latitude']);
+        $driver_longitude = sanitize_text_field($_POST['longitude']);
 
-        if ($order_id && $location) {
-            update_post_meta($order_id, '_driver_location', $location);
-            wp_send_json_success();
-        } else {
-            wp_send_json_error(array('message' => 'Invalid data.'));
-        }
+        // Assuming you have a function update_order_location() that updates the location
+        update_order_location($order_id, $driver_latitude, $driver_longitude);
+
+        wp_send_json_success();
     }
 }
 
 new AydenPate();
-?>

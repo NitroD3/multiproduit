@@ -1,43 +1,42 @@
 jQuery(document).ready(function($) {
-    var map;
-    var driverMarker;
+    var orderId = $('#aydenpate-tracking-widget').data('order-id');
 
-    function initializeMap() {
-        var mapOptions = {
-            zoom: 15,
-            center: new google.maps.LatLng(0, 0)
-        };
-        map = new google.maps.Map(document.getElementById('map'), mapOptions);
-        driverMarker = new google.maps.Marker({
-            map: map,
-            position: new google.maps.LatLng(0, 0),
-            icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: { lat: 0, lng: 0 }
         });
+
+        var marker = new google.maps.Marker({
+            position: { lat: 0, lng: 0 },
+            map: map
+        });
+
+        updateMap(map, marker);
     }
 
-    function updateDeliveryStatus() {
-        $.ajax({
-            url: aydenpate_data.ajax_url,
-            method: 'POST',
-            data: {
-                action: 'get_delivery_status',
-                order_id: aydenpate_data.order_id
-            },
-            success: function(response) {
-                if (response.success) {
-                    $('#delivery-status').text(response.data.status);
-                    var location = response.data.location.split(',');
-                    var latLng = new google.maps.LatLng(location[0], location[1]);
-                    driverMarker.setPosition(latLng);
+    function updateMap(map, marker) {
+        $.post(aydenpate_data.ajax_url, {
+            action: 'get_delivery_status',
+            security: aydenpate_data.nonce,
+            order_id: orderId
+        }, function(response) {
+            if (response.success) {
+                var status = response.data.status;
+                $('#status').text('Statut de la livraison : ' + status);
+
+                if (status.location) {
+                    var latLng = new google.maps.LatLng(status.location.lat, status.location.lng);
                     map.setCenter(latLng);
+                    marker.setPosition(latLng);
                 }
             }
+
+            setTimeout(function() {
+                updateMap(map, marker);
+            }, 10000);
         });
     }
 
-    // Initialize the map
-    initializeMap();
-
-    // Update delivery status every 10 seconds
-    setInterval(updateDeliveryStatus, 10000);
+    initMap();
 });

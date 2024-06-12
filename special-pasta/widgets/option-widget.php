@@ -1,21 +1,25 @@
 <?php
 namespace Elementor;
 
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
 class AydenPate_Option_Widget extends Widget_Base {
     public function get_name() {
         return 'aydenpate_option_widget';
     }
 
     public function get_title() {
-        return __('Option Widget', 'aydenpate');
+        return __('AydenPate Option', 'aydenpate');
     }
 
     public function get_icon() {
-        return 'eicon-restaurant';
+        return 'eicon-accordion';
     }
 
     public function get_categories() {
-        return ['basic'];
+        return ['general'];
     }
 
     protected function _register_controls() {
@@ -28,11 +32,12 @@ class AydenPate_Option_Widget extends Widget_Base {
         );
 
         $this->add_control(
-            'title',
+            'content',
             [
-                'label' => __('Title', 'aydenpate'),
-                'type' => \Elementor\Controls_Manager::TEXT,
-                'default' => __('Choix des options', 'aydenpate'),
+                'label' => __('Content', 'aydenpate'),
+                'type' => \Elementor\Controls_Manager::WYSIWYG,
+                'default' => __('Default content', 'aydenpate'),
+                'placeholder' => __('Type your content here', 'aydenpate'),
             ]
         );
 
@@ -41,32 +46,14 @@ class AydenPate_Option_Widget extends Widget_Base {
 
     protected function render() {
         $settings = $this->get_settings_for_display();
-        echo '<div class="aydenpate-option-widget">';
-        echo '<h3>' . $settings['title'] . '</h3>';
-        echo '<div id="pasta-options"></div>';
-        echo '<div id="sauce-options"></div>';
-        echo '<div id="cheese-options"></div>';
-        echo '<div id="dessert-options"></div>';
-        echo '<div id="drink-options"></div>';
-        echo '</div>';
+        echo '<div class="aydenpate-option-widget">' . $settings['content'] . '</div>';
     }
 
     protected function _content_template() {
         ?>
-        <#
-        var title = settings.title;
-        #>
         <div class="aydenpate-option-widget">
-            <h3>{{{ title }}}</h3>
-            <div id="pasta-options"></div>
-            <div id="sauce-options"></div>
-            <div id="cheese-options"></div>
-            <div id="dessert-options"></div>
-            <div id="drink-options"></div>
+            {{{ settings.content }}}
         </div>
         <?php
     }
 }
-
-Plugin::instance()->widgets_manager->register_widget_type(new AydenPate_Option_Widget());
-?>
