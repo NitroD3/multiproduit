@@ -205,6 +205,7 @@ final class AydenPate {
                     <input type="text" id="delivery-instructions" name="delivery_instructions" placeholder="Instructions de livraison">
                     <input type="tel" id="delivery-phone" name="delivery_phone" placeholder="Numéro de téléphone" required pattern="^\d{10}$">
                 </div>
+                <button type="button" id="prev-step" data-step="1" style="display: none;">Précédent</button>
                 <button type="button" id="next-step" data-step="1">Suivant</button>
                 <button type="submit" id="submit-order" style="display: none;">Ajouter au panier</button>
             </form>

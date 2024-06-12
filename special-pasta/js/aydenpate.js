@@ -2,20 +2,25 @@ jQuery(document).ready(function($) {
     let currentStep = 1;
 
     function showStep(step) {
-    $('.order-step').hide();
-    if (step <= 5) {
-        $('#step-' + step).show();
-        $('#next-step').show().text('Suivant');
-        $('#submit-order').hide();
-        $('#delivery-details').hide();
-        $('#order-summary').hide();
-    } else {
-        $('#next-step').hide();
-        $('#submit-order').show();
-        $('#delivery-details').show();
-        $('#order-summary').show();
+        $('.order-step').hide();
+        if (step <= 5) {
+            $('#step-' + step).show();
+            $('#next-step').show().text('Suivant').attr('data-step', step);
+            $('#prev-step').show().attr('data-step', step - 1);
+            $('#submit-order').hide();
+            $('#delivery-details').hide();
+            $('#order-summary').hide();
+        } else {
+            $('#next-step').hide();
+            $('#prev-step').show().attr('data-step', step - 1);
+            $('#submit-order').show();
+            $('#delivery-details').show();
+            $('#order-summary').show();
+        }
+        if (step === 1) {
+            $('#prev-step').hide();
+        }
     }
-}
 
     $('#next-step').on('click', function() {
         if (currentStep < 6) {
@@ -23,16 +28,28 @@ jQuery(document).ready(function($) {
             if (!selectedOption) {
                 selectedOption = $('#step-' + currentStep + ' input:checked').val();
             }
-            $('#order-details').append('<li>' + selectedOption + '</li>');
+            $('#order-details').append('<li>' + selectedOption + ' <button type="button" class="edit-step" data-step="' + currentStep + '">Modifier</button></li>');
             currentStep++;
             showStep(currentStep);
         }
     });
 
+    $('#prev-step').on('click', function() {
+        currentStep--;
+        $('#order-details li:last-child').remove();
+        showStep(currentStep);
+    });
+
+    $(document).on('click', '.edit-step', function() {
+        let step = $(this).data('step');
+        currentStep = step;
+        $('#order-details li:gt(' + (step - 1) + ')').remove();
+        showStep(step);
+    });
+
     $('#aydenpate-order-form').on('submit', function(e) {
         e.preventDefault();
 
-        // Validation
         const deliveryAddress = $('#delivery-address').val();
         const deliveryPhone = $('#delivery-phone').val();
 
@@ -64,7 +81,6 @@ jQuery(document).ready(function($) {
         });
     });
 
-    // Load options
     $.each(aydenpate_data.pasta_options, function(index, option) {
         $('#pasta-options').append('<input type="radio" name="pasta" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
     });
