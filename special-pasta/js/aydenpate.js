@@ -61,13 +61,9 @@ jQuery(document).ready(function($) {
     });
 
     // Load options
-    if (aydenpate_data.pasta_options && aydenpate_data.pasta_options.length > 0) {
-        $.each(aydenpate_data.pasta_options, function(index, option) {
-            $('#pasta-options').append('<input type="radio" name="pasta" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
-        });
-    } else {
-        console.error('Pasta options not loaded');
-    }
+    $.each(aydenpate_data.pasta_options, function(index, option) {
+        $('#pasta-options').append('<input type="radio" name="pasta" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
+    });
 
     $.each(aydenpate_data.sauce_options, function(index, option) {
         $('#sauce-options').append('<input type="radio" name="sauce" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br>');
