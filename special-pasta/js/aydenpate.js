@@ -29,7 +29,7 @@ jQuery(document).ready(function($) {
             if (!selectedOption) {
                 selectedOption = $('#step-' + currentStep + ' input:checked').val();
             }
-            let selectedPrice = $('#step-' + currentStep + ' input:checked').nextAll('span:contains("Prix")').text();
+            let selectedPrice = $('#step-' + currentStep + ' input:checked').siblings('span:contains("Prix")').first().text().trim();
 
             // If there was a previous selection for this step, remove it
             if (previousSelections[currentStep]) {
@@ -56,13 +56,11 @@ jQuery(document).ready(function($) {
         showStep(step);
 
         // Get the updated price
-        let updatedPrice = $('#step-' + currentStep + ' input:checked').nextAll('span:contains("Prix")').text().split(' ')[2];
-
-        // Remove the old price from the order details
-        $('#order-details li[data-step="' + currentStep + '"]').find('span:contains("Prix")').remove();
+        let updatedPrice = $('#step-' + currentStep + ' input:checked').siblings('span:contains("Prix")').first().text().trim();
 
         // Update the price in the order details
-        $('#order-details li[data-step="' + currentStep + '"]').append(' - Prix : ' + updatedPrice + '€');
+        $('#order-details li[data-step="' + currentStep + '"]').find('span:contains("Prix")').remove();
+        $('#order-details li[data-step="' + currentStep + '"]').append(' - Prix : ' + updatedPrice);
     });
 
     $('#aydenpate-order-form').on('submit', function(e) {
@@ -99,25 +97,23 @@ jQuery(document).ready(function($) {
         });
     });
 
-    $.each(aydenpate_data.pasta_options, function(index, option) {
-        $('#pasta-options').append('<input type="radio" name="pasta" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '€</span><br><span>Description : ' + option.description + '</span><br>');
-    });
+    // Append options dynamically
+    function appendOptions(containerId, options) {
+        $.each(options, function(index, option) {
+            $('#' + containerId).append(
+                '<input type="radio" name="' + containerId + '" value="' + option.name + '">' + option.name +
+                '<img src="' + option.image + '"><br>' +
+                '<span>Prix : ' + option.price + '€</span><br>' +
+                '<span>Description : ' + option.description + '</span><br>'
+            );
+        });
+    }
 
-    $.each(aydenpate_data.sauce_options, function(index, option) {
-        $('#sauce-options').append('<input type="radio" name="sauce" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '€</span><br><span>Description : ' + option.description + '</span><br>');
-    });
-
-    $.each(aydenpate_data.cheese_options, function(index, option) {
-        $('#cheese-options').append('<input type="radio" name="cheese" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '€</span><br><span>Description : ' + option.description + '</span><br>');
-    });
-
-    $.each(aydenpate_data.dessert_options, function(index, option) {
-        $('#dessert-options').append('<input type="radio" name="dessert" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '€</span><br><span>Description : ' + option.description + '</span><br>');
-    });
-
-    $.each(aydenpate_data.drink_options, function(index, option) {
-        $('#drink-options').append('<input type="radio" name="drink" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '€</span><br><span>Description : ' + option.description + '</span><br>');
-    });
+    appendOptions('pasta-options', aydenpate_data.pasta_options);
+    appendOptions('sauce-options', aydenpate_data.sauce_options);
+    appendOptions('cheese-options', aydenpate_data.cheese_options);
+    appendOptions('dessert-options', aydenpate_data.dessert_options);
+    appendOptions('drink-options', aydenpate_data.drink_options);
 
     showStep(1);
 });
