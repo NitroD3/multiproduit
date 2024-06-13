@@ -55,18 +55,17 @@ jQuery(document).ready(function($) {
         currentStep = step;
         showStep(step);
 
-        // Update the selection to reflect the current choice
-        let selectedOption = $('#step-' + currentStep + ' input:checked').next('label').text();
-        if (!selectedOption) {
-            selectedOption = $('#step-' + currentStep + ' input:checked').val();
+        // Update the price in the order details when modifying an item
+        let updatedOption = $('#step-' + step + ' input:checked').next('label').text();
+        if (!updatedOption) {
+            updatedOption = $('#step-' + step + ' input:checked').val();
         }
-        let updatedPrice = $('#step-' + currentStep + ' input:checked').siblings('span:contains("Prix")').first().text().trim();
+        let updatedPrice = $('#step-' + step + ' input:checked').siblings('span:contains("Prix")').first().text().trim();
 
-        // Update the option and price in the order details
-        $('#order-details li[data-step="' + currentStep + '"]').html(selectedOption + ' - ' + updatedPrice + ' <button type="button" class="edit-step" data-step="' + currentStep + '">Modifier</button>');
-
-        // Update previousSelections to keep track of the updated selection
-        previousSelections[currentStep] = { option: selectedOption, price: updatedPrice };
+        // Update the option and price in the order summary
+        let $orderDetailItem = $('#order-details li[data-step="' + step + '"]');
+        $orderDetailItem.html(updatedOption + ' - ' + updatedPrice + ' <button type="button" class="edit-step" data-step="' + step + '">Modifier</button>');
+        previousSelections[step] = { option: updatedOption, price: updatedPrice };
     });
 
     $('#aydenpate-order-form').on('submit', function(e) {
