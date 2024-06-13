@@ -31,6 +31,11 @@ jQuery(document).ready(function($) {
             }
             let selectedPrice = $('#step-' + currentStep + ' input:checked').siblings('span').text().split('€')[0].split('Prix : ')[1].trim() + '€';
 
+            // Console logs for debugging
+            console.log('Step: ' + currentStep);
+            console.log('Selected Option: ' + selectedOption);
+            console.log('Selected Price: ' + selectedPrice);
+
             // If there was a previous selection for this step, remove it
             if (previousSelections[currentStep]) {
                 $('#order-details li[data-step="' + currentStep + '"]').remove();
@@ -61,6 +66,11 @@ jQuery(document).ready(function($) {
             updatedOption = $('#step-' + step + ' input:checked').val();
         }
         let updatedPrice = $('#step-' + step + ' input:checked').siblings('span').text().split('€')[0].split('Prix : ')[1].trim() + '€';
+
+        // Console logs for debugging
+        console.log('Step: ' + step);
+        console.log('Updated Option: ' + updatedOption);
+        console.log('Updated Price: ' + updatedPrice);
 
         // Update the option and price in the order summary
         let $orderDetailItem = $('#order-details li[data-step="' + step + '"]');
