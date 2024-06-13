@@ -245,6 +245,15 @@ final class AydenPate {
             'drink' => $drink,
         ];
 
+        // Start session if not already started
+        if (!WC()->session) {
+            WC()->session = new WC_Session_Handler();
+            WC()->session->init();
+        }
+
+        $success = true;
+        $error_message = '';
+
         // Loop through each item and add to cart
         foreach ($items as $type => $name) {
             if ($name) {
@@ -264,18 +273,24 @@ final class AydenPate {
 
                     if (!$added) {
                         error_log('Failed to add product to cart: ' . print_r($custom_data, true));
-                        wp_send_json_error(array('message' => 'Failed to add product to cart'));
-                        return;
+                        $success = false;
+                        $error_message = 'Failed to add product to cart';
+                        break;
                     }
                 } else {
                     error_log('Product not found: ' . $name);
-                    wp_send_json_error(array('message' => 'Product not found: ' . $name));
-                    return;
+                    $success = false;
+                    $error_message = 'Product not found: ' . $name;
+                    break;
                 }
             }
         }
 
-        wp_send_json_success();
+        if ($success) {
+            wp_send_json_success();
+        } else {
+            wp_send_json_error(array('message' => $error_message));
+        }
     }
 
     public function get_delivery_status() {
