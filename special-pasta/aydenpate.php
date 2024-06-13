@@ -221,39 +221,61 @@ final class AydenPate {
     public function add_to_cart() {
         check_ajax_referer('aydenpate_nonce', 'security');
 
-        // Replace this with your actual product ID or logic to dynamically determine it
-        $product_id = 123; // Example product ID, replace with actual ID
+        // Get selected options from POST data
+        $pasta = sanitize_text_field($_POST['pasta']);
+        $sauce = sanitize_text_field($_POST['sauce']);
+        $cheese = sanitize_text_field($_POST['cheese']);
+        $dessert = sanitize_text_field($_POST['dessert']);
+        $drink = sanitize_text_field($_POST['drink']);
+        $delivery_address = sanitize_text_field($_POST['delivery_address']);
+        $delivery_instructions = sanitize_text_field($_POST['delivery_instructions']);
+        $delivery_phone = sanitize_text_field($_POST['delivery_phone']);
 
-        if (!$product_id) {
-            wp_send_json_error(array('message' => 'Invalid product ID'));
-            return;
+        // Function to get product ID by name
+        function get_product_id_by_name($product_name) {
+            $product = get_page_by_title($product_name, OBJECT, 'product');
+            return $product ? $product->ID : false;
         }
 
-        $quantity = 1;
+        $items = [
+            'pasta' => $pasta,
+            'sauce' => $sauce,
+            'cheese' => $cheese,
+            'dessert' => $dessert,
+            'drink' => $drink,
+        ];
 
-        $custom_data = array(
-            'pasta' => sanitize_text_field($_POST['pasta']),
-            'sauce' => sanitize_text_field($_POST['sauce']),
-            'cheese' => sanitize_text_field($_POST['cheese']),
-            'dessert' => sanitize_text_field($_POST['dessert']),
-            'drink' => sanitize_text_field($_POST['drink']),
-            'delivery_address' => sanitize_text_field($_POST['delivery_address']),
-            'delivery_instructions' => sanitize_text_field($_POST['delivery_instructions']),
-            'delivery_phone' => sanitize_text_field($_POST['delivery_phone']),
-        );
+        // Loop through each item and add to cart
+        foreach ($items as $type => $name) {
+            if ($name) {
+                $product_id = get_product_id_by_name($name);
 
-        $cart_item_data = array(
-            'custom_data' => $custom_data,
-        );
+                if ($product_id) {
+                    $custom_data = array(
+                        'type' => $type,
+                        'name' => $name,
+                        'delivery_address' => $delivery_address,
+                        'delivery_instructions' => $delivery_instructions,
+                        'delivery_phone' => $delivery_phone,
+                    );
 
-        $cart_item_key = WC()->cart->add_to_cart($product_id, $quantity, 0, array(), $cart_item_data);
+                    $cart_item_data = array('custom_data' => $custom_data);
+                    $added = WC()->cart->add_to_cart($product_id, 1, 0, array(), $cart_item_data);
 
-        if ($cart_item_key) {
-            wp_send_json_success();
-        } else {
-            error_log('Failed to add product to cart: ' . print_r($cart_item_data, true));
-            wp_send_json_error(array('message' => 'Failed to add product to cart'));
+                    if (!$added) {
+                        error_log('Failed to add product to cart: ' . print_r($custom_data, true));
+                        wp_send_json_error(array('message' => 'Failed to add product to cart'));
+                        return;
+                    }
+                } else {
+                    error_log('Product not found: ' . $name);
+                    wp_send_json_error(array('message' => 'Product not found: ' . $name));
+                    return;
+                }
+            }
         }
+
+        wp_send_json_success();
     }
 
     public function get_delivery_status() {
