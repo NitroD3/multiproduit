@@ -55,12 +55,18 @@ jQuery(document).ready(function($) {
         currentStep = step;
         showStep(step);
 
-        // Get the updated price
+        // Update the selection to reflect the current choice
+        let selectedOption = $('#step-' + currentStep + ' input:checked').next('label').text();
+        if (!selectedOption) {
+            selectedOption = $('#step-' + currentStep + ' input:checked').val();
+        }
         let updatedPrice = $('#step-' + currentStep + ' input:checked').siblings('span:contains("Prix")').first().text().trim();
 
-        // Update the price in the order details
-        $('#order-details li[data-step="' + currentStep + '"]').find('span:contains("Prix")').remove();
-        $('#order-details li[data-step="' + currentStep + '"]').append(' - Prix : ' + updatedPrice);
+        // Update the option and price in the order details
+        $('#order-details li[data-step="' + currentStep + '"]').html(selectedOption + ' - ' + updatedPrice + ' <button type="button" class="edit-step" data-step="' + currentStep + '">Modifier</button>');
+
+        // Update previousSelections to keep track of the updated selection
+        previousSelections[currentStep] = { option: selectedOption, price: updatedPrice };
     });
 
     $('#aydenpate-order-form').on('submit', function(e) {
