@@ -38,7 +38,7 @@ jQuery(document).ready(function($) {
 
             // Add the new selection and store it as the previous selection for this step
             $('#order-details').append('<li data-step="' + currentStep + '">' + selectedOption + ' - ' + selectedPrice + ' <button type="button" class="edit-step" data-step="' + currentStep + '">Modifier</button></li>');
-            previousSelections[currentStep] = selectedOption;
+            previousSelections[currentStep] = { option: selectedOption, price: selectedPrice };
 
             currentStep++;
             showStep(currentStep);
@@ -54,6 +54,15 @@ jQuery(document).ready(function($) {
         let step = $(this).data('step');
         currentStep = step;
         showStep(step);
+
+        // Get the updated price
+        let updatedPrice = $('#step-' + currentStep + ' input:checked').nextAll('span:contains("Prix")').text().split(' ')[2];
+
+        // Remove the old price from the order details
+        $('#order-details li[data-step="' + currentStep + '"]').find('span:contains("Prix")').remove();
+
+        // Update the price in the order details
+        $('#order-details li[data-step="' + currentStep + '"]').append(' - Prix : ' + updatedPrice + '€');
     });
 
     $('#aydenpate-order-form').on('submit', function(e) {
@@ -91,23 +100,23 @@ jQuery(document).ready(function($) {
     });
 
     $.each(aydenpate_data.pasta_options, function(index, option) {
-        $('#pasta-options').append('<input type="radio" name="pasta" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '</span><br><span>Description : ' + option.description + '</span><br>');
+        $('#pasta-options').append('<input type="radio" name="pasta" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '€</span><br><span>Description : ' + option.description + '</span><br>');
     });
 
     $.each(aydenpate_data.sauce_options, function(index, option) {
-        $('#sauce-options').append('<input type="radio" name="sauce" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '</span><br><span>Description : ' + option.description + '</span><br>');
+        $('#sauce-options').append('<input type="radio" name="sauce" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '€</span><br><span>Description : ' + option.description + '</span><br>');
     });
 
     $.each(aydenpate_data.cheese_options, function(index, option) {
-        $('#cheese-options').append('<input type="radio" name="cheese" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '</span><br><span>Description : ' + option.description + '</span><br>');
+        $('#cheese-options').append('<input type="radio" name="cheese" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '€</span><br><span>Description : ' + option.description + '</span><br>');
     });
 
     $.each(aydenpate_data.dessert_options, function(index, option) {
-        $('#dessert-options').append('<input type="radio" name="dessert" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '</span><br><span>Description : ' + option.description + '</span><br>');
+        $('#dessert-options').append('<input type="radio" name="dessert" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '€</span><br><span>Description : ' + option.description + '</span><br>');
     });
 
     $.each(aydenpate_data.drink_options, function(index, option) {
-        $('#drink-options').append('<input type="radio" name="drink" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '</span><br><span>Description : ' + option.description + '</span><br>');
+        $('#drink-options').append('<input type="radio" name="drink" value="' + option.name + '">' + option.name + '<img src="' + option.image + '"><br><span>Prix : ' + option.price + '€</span><br><span>Description : ' + option.description + '</span><br>');
     });
 
     showStep(1);
