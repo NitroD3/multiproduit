@@ -29,7 +29,7 @@ jQuery(document).ready(function($) {
             if (!selectedOption) {
                 selectedOption = $('#step-' + currentStep + ' input:checked').val();
             }
-            let selectedPrice = $('#step-' + currentStep + ' input:checked').siblings('span').text().split('€')[0].split('Prix : ')[1].trim() + '€';
+            let selectedPrice = $('#step-' + currentStep + ' input:checked').closest('label').find('span.price').text().trim();
 
             // Console logs for debugging
             console.log('Step: ' + currentStep);
@@ -65,7 +65,7 @@ jQuery(document).ready(function($) {
         if (!updatedOption) {
             updatedOption = $('#step-' + step + ' input:checked').val();
         }
-        let updatedPrice = $('#step-' + step + ' input:checked').siblings('span').text().split('€')[0].split('Prix : ')[1].trim() + '€';
+        let updatedPrice = $('#step-' + step + ' input:checked').closest('label').find('span.price').text().trim();
 
         // Console logs for debugging
         console.log('Step: ' + step);
@@ -116,10 +116,10 @@ jQuery(document).ready(function($) {
     function appendOptions(containerId, options) {
         $.each(options, function(index, option) {
             $('#' + containerId).append(
-                '<input type="radio" name="' + containerId + '" value="' + option.name + '">' + option.name +
+                '<label><input type="radio" name="' + containerId + '" value="' + option.name + '"> ' + option.name +
                 '<img src="' + option.image + '"><br>' +
-                '<span>Prix : ' + option.price + '€</span><br>' +
-                '<span>Description : ' + option.description + '</span><br>'
+                '<span class="price">Prix : ' + option.price + '€</span><br>' +
+                '<span>Description : ' + option.description + '</span><br></label>'
             );
         });
     }
