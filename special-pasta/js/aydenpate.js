@@ -29,7 +29,7 @@ jQuery(document).ready(function($) {
             if (!selectedOption) {
                 selectedOption = $('#step-' + currentStep + ' input:checked').val();
             }
-            let selectedPrice = $('#step-' + currentStep + ' input:checked').siblings('span:contains("Prix")').first().text().trim();
+            let selectedPrice = $('#step-' + currentStep + ' input:checked').siblings('span').text().split('€')[0].split('Prix : ')[1].trim() + '€';
 
             // If there was a previous selection for this step, remove it
             if (previousSelections[currentStep]) {
@@ -37,7 +37,7 @@ jQuery(document).ready(function($) {
             }
 
             // Add the new selection and store it as the previous selection for this step
-            $('#order-details').append('<li data-step="' + currentStep + '">' + selectedOption + ' - ' + selectedPrice + ' <button type="button" class="edit-step" data-step="' + currentStep + '">Modifier</button></li>');
+            $('#order-details').append('<li data-step="' + currentStep + '">' + selectedOption + ' - Prix : ' + selectedPrice + ' <button type="button" class="edit-step" data-step="' + currentStep + '">Modifier</button></li>');
             previousSelections[currentStep] = { option: selectedOption, price: selectedPrice };
 
             currentStep++;
@@ -60,11 +60,11 @@ jQuery(document).ready(function($) {
         if (!updatedOption) {
             updatedOption = $('#step-' + step + ' input:checked').val();
         }
-        let updatedPrice = $('#step-' + step + ' input:checked').siblings('span:contains("Prix")').first().text().trim();
+        let updatedPrice = $('#step-' + step + ' input:checked').siblings('span').text().split('€')[0].split('Prix : ')[1].trim() + '€';
 
         // Update the option and price in the order summary
         let $orderDetailItem = $('#order-details li[data-step="' + step + '"]');
-        $orderDetailItem.html(updatedOption + ' - ' + updatedPrice + ' <button type="button" class="edit-step" data-step="' + step + '">Modifier</button>');
+        $orderDetailItem.html(updatedOption + ' - Prix : ' + updatedPrice + ' <button type="button" class="edit-step" data-step="' + step + '">Modifier</button>');
         previousSelections[step] = { option: updatedOption, price: updatedPrice };
     });
 
