@@ -1,6 +1,7 @@
 jQuery(document).ready(function($) {
     let currentStep = 1;
     let previousSelections = {};
+    let totalPrice = 0;
 
     function showStep(step) {
         $('.order-step').hide();
@@ -17,10 +18,22 @@ jQuery(document).ready(function($) {
             $('#submit-order').show();
             $('#delivery-details').show();
             $('#order-summary').show();
+            updateTotalPrice();
         }
         if (step === 1) {
             $('#prev-step').hide();
         }
+    }
+
+    function updateTotalPrice() {
+        totalPrice = 0;
+        $('#order-details li').each(function() {
+            let priceText = $(this).text().match(/Prix : (\d+\.\d+)/);
+            if (priceText) {
+                totalPrice += parseFloat(priceText[1]);
+            }
+        });
+        $('#total-price').text('Prix total : ' + totalPrice.toFixed(2) + '€');
     }
 
     $('#next-step').on('click', function() {
@@ -42,7 +55,7 @@ jQuery(document).ready(function($) {
             }
 
             // Add the new selection and store it as the previous selection for this step
-            $('#order-details').append('<li data-step="' + currentStep + '">' + selectedOption + ' - Prix : ' + selectedPrice + ' <button type="button" class="edit-step" data-step="' + currentStep + '">Modifier</button></li>');
+            $('#order-details').append('<li data-step="' + currentStep + '">' + selectedOption + ' - ' + selectedPrice + ' <button type="button" class="edit-step" data-step="' + currentStep + '">Modifier</button></li>');
             previousSelections[currentStep] = { option: selectedOption, price: selectedPrice };
 
             currentStep++;
@@ -74,8 +87,10 @@ jQuery(document).ready(function($) {
 
         // Update the option and price in the order summary
         let $orderDetailItem = $('#order-details li[data-step="' + step + '"]');
-        $orderDetailItem.html(updatedOption + ' - Prix : ' + updatedPrice + ' <button type="button" class="edit-step" data-step="' + step + '">Modifier</button>');
+        $orderDetailItem.html(updatedOption + ' - ' + updatedPrice + ' <button type="button" class="edit-step" data-step="' + step + '">Modifier</button>');
         previousSelections[step] = { option: updatedOption, price: updatedPrice };
+
+        updateTotalPrice();
     });
 
     $('#aydenpate-order-form').on('submit', function(e) {

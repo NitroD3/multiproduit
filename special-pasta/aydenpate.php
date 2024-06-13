@@ -203,6 +203,7 @@ final class AydenPate {
                     <div id="order-summary" style="display: none;">
                         <h3>Récapitulatif de la commande</h3>
                         <ul id="order-details"></ul>
+                        <p id="total-price">Prix total : 0.00€</p>
                     </div>
                     <input type="text" id="delivery-address" name="delivery_address" placeholder="Adresse de livraison" required pattern="^[a-zA-Z0-9\s,]*$">
                     <input type="text" id="delivery-instructions" name="delivery_instructions" placeholder="Instructions de livraison">
