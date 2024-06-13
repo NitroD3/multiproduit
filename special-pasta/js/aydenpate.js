@@ -122,7 +122,8 @@ jQuery(document).ready(function($) {
                 alert('Produit ajouté au panier');
                 window.location.href = '/cart/';
             } else {
-                alert('Erreur lors de l\'ajout au panier');
+                alert('Erreur lors de l\'ajout au panier : ' + response.data.message);
+                console.log(response.data);
             }
         });
     });

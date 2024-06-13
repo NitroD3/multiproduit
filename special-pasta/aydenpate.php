@@ -221,7 +221,14 @@ final class AydenPate {
     public function add_to_cart() {
         check_ajax_referer('aydenpate_nonce', 'security');
 
-        $product_id = 0; // Replace this with your actual product ID or dynamically determine it
+        // Replace this with your actual product ID or logic to dynamically determine it
+        $product_id = 123; // Example product ID, replace with actual ID
+
+        if (!$product_id) {
+            wp_send_json_error(array('message' => 'Invalid product ID'));
+            return;
+        }
+
         $quantity = 1;
 
         $custom_data = array(
@@ -235,22 +242,17 @@ final class AydenPate {
             'delivery_phone' => sanitize_text_field($_POST['delivery_phone']),
         );
 
-        // Log custom data for debugging
-        error_log(print_r($custom_data, true));
-
         $cart_item_data = array(
             'custom_data' => $custom_data,
         );
 
-        // Add the custom product to the WooCommerce cart
         $cart_item_key = WC()->cart->add_to_cart($product_id, $quantity, 0, array(), $cart_item_data);
 
         if ($cart_item_key) {
             wp_send_json_success();
-            error_log('Product added to cart');
         } else {
+            error_log('Failed to add product to cart: ' . print_r($cart_item_data, true));
             wp_send_json_error(array('message' => 'Failed to add product to cart'));
-            error_log('Failed to add product to cart');
         }
     }
 
