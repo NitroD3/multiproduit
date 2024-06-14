@@ -47,10 +47,8 @@ jQuery(document).ready(function($) {
 
     $('#next-step').on('click', function() {
         if (currentStep < 6) {
-            let selectedOption = $('#step-' + currentStep + ' input:checked').next('label').text();
-            if (!selectedOption) {
-                selectedOption = $('#step-' + currentStep + ' input:checked').val();
-            }
+            let selectedOption = $('#step-' + currentStep + ' input:checked').val();
+            let selectedLabel = (selectedOption === 'none') ? 'Sans' : $('#step-' + currentStep + ' input:checked').next('label').text();
             let selectedPrice = $('#step-' + currentStep + ' input:checked').closest('label').find('span.price').text().trim();
 
             // If there was a previous selection for this step, remove it
@@ -59,7 +57,7 @@ jQuery(document).ready(function($) {
             }
 
             // Add the new selection and store it as the previous selection for this step
-            $('#order-details').append('<li data-step="' + currentStep + '">' + selectedOption + ' - ' + selectedPrice + ' <button type="button" class="edit-step" data-step="' + currentStep + '">Modifier</button></li>');
+            $('#order-details').append('<li data-step="' + currentStep + '">' + selectedLabel + ' - ' + selectedPrice + ' <button type="button" class="edit-step" data-step="' + currentStep + '">Modifier</button></li>');
             previousSelections[currentStep] = { option: selectedOption, price: selectedPrice };
 
             currentStep++;
@@ -78,15 +76,13 @@ jQuery(document).ready(function($) {
         showStep(step);
 
         // Update the price in the order details when modifying an item
-        let updatedOption = $('#step-' + step + ' input:checked').next('label').text();
-        if (!updatedOption) {
-            updatedOption = $('#step-' + step + ' input:checked').val();
-        }
+        let updatedOption = $('#step-' + step + ' input:checked').val();
+        let updatedLabel = (updatedOption === 'none') ? 'Sans' : $('#step-' + step + ' input:checked').next('label').text();
         let updatedPrice = $('#step-' + step + ' input:checked').closest('label').find('span.price').text().trim();
 
         // Update the option and price in the order summary
         let $orderDetailItem = $('#order-details li[data-step="' + step + '"]');
-        $orderDetailItem.html(updatedOption + ' - ' + updatedPrice + ' <button type="button" class="edit-step" data-step="' + step + '">Modifier</button>');
+        $orderDetailItem.html(updatedLabel + ' - ' + updatedPrice + ' <button type="button" class="edit-step" data-step="' + step + '">Modifier</button>');
         previousSelections[step] = { option: updatedOption, price: updatedPrice };
 
         updateTotalPrice();
