@@ -48,7 +48,7 @@ jQuery(document).ready(function($) {
     $('#next-step').on('click', function() {
         if (currentStep < 6) {
             let selectedOption = $('#step-' + currentStep + ' input:checked').val();
-            let selectedLabel = (selectedOption === 'none') ? 'Sans' : $('#step-' + currentStep + ' input:checked').next('label').text();
+            let selectedLabel = (selectedOption === 'none') ? 'Sans' : $('#step-' + currentStep + ' input:checked').closest('label').find('span.description').text();
             let selectedPrice = $('#step-' + currentStep + ' input:checked').closest('label').find('span.price').text().trim();
 
             // If there was a previous selection for this step, remove it
@@ -77,7 +77,7 @@ jQuery(document).ready(function($) {
 
         // Update the price in the order details when modifying an item
         let updatedOption = $('#step-' + step + ' input:checked').val();
-        let updatedLabel = (updatedOption === 'none') ? 'Sans' : $('#step-' + step + ' input:checked').next('label').text();
+        let updatedLabel = (updatedOption === 'none') ? 'Sans' : $('#step-' + step + ' input:checked').closest('label').find('span.description').text();
         let updatedPrice = $('#step-' + step + ' input:checked').closest('label').find('span.price').text().trim();
 
         // Update the option and price in the order summary
@@ -135,7 +135,7 @@ jQuery(document).ready(function($) {
                 '<label class="option"><input type="radio" name="' + containerId + '" value="' + option.name + '"> ' + option.name +
                 '<img src="' + option.image + '"><br>' +
                 '<span class="price">Prix : ' + option.price + '€</span><br>' +
-                '<span>Description : ' + option.description + '</span></label>'
+                '<span class="description">' + option.name + '</span></label>' // Updated to include a span with class description for product name
             );
         });
     }
