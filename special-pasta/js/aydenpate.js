@@ -23,6 +23,7 @@ jQuery(document).ready(function($) {
         if (step === 1) {
             $('#prev-step').hide();
         }
+        validateStep();
     }
 
     function updateTotalPrice() {
@@ -34,6 +35,14 @@ jQuery(document).ready(function($) {
             }
         });
         $('#total-price').text('Prix total : ' + totalPrice.toFixed(2) + '€');
+    }
+
+    function validateStep() {
+        if ($('#step-' + currentStep + ' input:checked').length === 0) {
+            $('#next-step').prop('disabled', true);
+        } else {
+            $('#next-step').prop('disabled', false);
+        }
     }
 
     $('#next-step').on('click', function() {
@@ -119,7 +128,12 @@ jQuery(document).ready(function($) {
     });
 
     // Append options dynamically
-    function appendOptions(containerId, options) {
+    function appendOptions(containerId, options, includeNone = false) {
+        if (includeNone) {
+            $('#' + containerId).append(
+                '<label class="option"><input type="radio" name="' + containerId + '" value="none"> Sans <br><span class="price">Prix : 0.00€</span><br></label>'
+            );
+        }
         $.each(options, function(index, option) {
             $('#' + containerId).append(
                 '<label class="option"><input type="radio" name="' + containerId + '" value="' + option.name + '"> ' + option.name +
@@ -132,9 +146,13 @@ jQuery(document).ready(function($) {
 
     appendOptions('pasta-options', aydenpate_data.pasta_options);
     appendOptions('sauce-options', aydenpate_data.sauce_options);
-    appendOptions('cheese-options', aydenpate_data.cheese_options);
-    appendOptions('dessert-options', aydenpate_data.dessert_options);
-    appendOptions('drink-options', aydenpate_data.drink_options);
+    appendOptions('cheese-options', aydenpate_data.cheese_options, true); // Including "None"
+    appendOptions('dessert-options', aydenpate_data.dessert_options, true); // Including "None"
+    appendOptions('drink-options', aydenpate_data.drink_options, true); // Including "None"
+
+    $('input[type=radio]').on('change', function() {
+        validateStep();
+    });
 
     showStep(1);
 });
