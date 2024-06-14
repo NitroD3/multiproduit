@@ -4,9 +4,9 @@ jQuery(document).ready(function($) {
     let totalPrice = 0;
 
     function showStep(step) {
-        $('.order-step').hide();
-        if (step <= 5) {
-            $('#step-' + step).show();
+        $('.order-step').removeClass('active').hide();
+        $('#step-' + step).addClass('active').fadeIn();
+        if (step < 6) {
             $('#next-step').show().text('Suivant').attr('data-step', step);
             $('#prev-step').show().attr('data-step', step - 1);
             $('#submit-order').hide();
@@ -16,8 +16,8 @@ jQuery(document).ready(function($) {
             $('#next-step').hide();
             $('#prev-step').show().attr('data-step', step - 1);
             $('#submit-order').show();
-            $('#delivery-details').show();
-            $('#order-summary').show();
+            $('#delivery-details').fadeIn();
+            $('#order-summary').fadeIn();
             updateTotalPrice();
         }
         if (step === 1) {
@@ -43,11 +43,6 @@ jQuery(document).ready(function($) {
                 selectedOption = $('#step-' + currentStep + ' input:checked').val();
             }
             let selectedPrice = $('#step-' + currentStep + ' input:checked').closest('label').find('span.price').text().trim();
-
-            // Console logs for debugging
-            console.log('Step: ' + currentStep);
-            console.log('Selected Option: ' + selectedOption);
-            console.log('Selected Price: ' + selectedPrice);
 
             // If there was a previous selection for this step, remove it
             if (previousSelections[currentStep]) {
@@ -79,11 +74,6 @@ jQuery(document).ready(function($) {
             updatedOption = $('#step-' + step + ' input:checked').val();
         }
         let updatedPrice = $('#step-' + step + ' input:checked').closest('label').find('span.price').text().trim();
-
-        // Console logs for debugging
-        console.log('Step: ' + step);
-        console.log('Updated Option: ' + updatedOption);
-        console.log('Updated Price: ' + updatedPrice);
 
         // Update the option and price in the order summary
         let $orderDetailItem = $('#order-details li[data-step="' + step + '"]');
@@ -132,10 +122,10 @@ jQuery(document).ready(function($) {
     function appendOptions(containerId, options) {
         $.each(options, function(index, option) {
             $('#' + containerId).append(
-                '<label><input type="radio" name="' + containerId + '" value="' + option.name + '"> ' + option.name +
+                '<label class="option"><input type="radio" name="' + containerId + '" value="' + option.name + '"> ' + option.name +
                 '<img src="' + option.image + '"><br>' +
                 '<span class="price">Prix : ' + option.price + '€</span><br>' +
-                '<span>Description : ' + option.description + '</span><br></label>'
+                '<span>Description : ' + option.description + '</span></label>'
             );
         });
     }

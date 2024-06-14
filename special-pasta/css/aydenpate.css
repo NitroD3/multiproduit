@@ -4,6 +4,7 @@
     --secondary-color: #D4B02F;
     --background-color: #F6F3E6;
     --text-color: #6A8B46;
+    --accent-color: #D4B02F;
 }
 
 /* Style général du conteneur */
@@ -41,12 +42,14 @@
 /* Style pour les options */
 .elementor-widget-container .option {
     display: inline-block;
+    width: calc(33.333% - 20px);
     margin: 10px;
     text-align: center;
     border: 1px solid var(--primary-color);
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s;
+    cursor: pointer;
 }
 
 .elementor-widget-container .option:hover {
@@ -54,8 +57,8 @@
 }
 
 .elementor-widget-container .option img {
-    width: 100px;
-    height: 100px;
+    width: 100%;
+    height: 150px;
     object-fit: cover;
 }
 
@@ -81,6 +84,11 @@
     margin-bottom: 20px;
 }
 
+.elementor-widget-container #total-price {
+    font-size: 20px;
+    margin-top: 20px;
+}
+
 .elementor-widget-container #add-to-cart {
     background-color: var(--secondary-color);
     color: #fff;
@@ -95,54 +103,28 @@
     background-color: #b38924;
 }
 
-.aydenpate-option-widget {
-    padding: 15px;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-}
-
-.order-step {
-    margin-bottom: 20px;
-}
-
-.order-step img {
-    max-width: 100px;
-    display: block;
-}
-
-#aydenpate-order-form {
-    max-width: 600px;
-    margin: auto;
-}
-
-#aydenpate-order-form h3 {
-    margin-top: 20px;
-}
-
+/* Style pour les boutons */
 #aydenpate-order-form button {
-    display: inline-block;
+    background-color: var(--secondary-color);
+    color: #fff;
     padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
     margin-top: 20px;
 }
 
-#aydenpate-tracking-widget {
-    text-align: center;
+#aydenpate-order-form button:hover {
+    background-color: #b38924;
 }
 
-#aydenpate-tracking-widget #status {
-    margin-top: 10px;
-}
-
-.elementor-widget-container .option img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    cursor: pointer;
-}
-
-.elementor-widget-container .option label {
-    display: block;
+/* Style pour les champs de livraison */
+#delivery-details input {
+    width: calc(100% - 22px);
     padding: 10px;
-    cursor: pointer;
+    margin: 10px 0;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    background-color: #fff;
 }
-
