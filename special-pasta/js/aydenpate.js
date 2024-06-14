@@ -29,7 +29,7 @@ jQuery(document).ready(function($) {
     function updateTotalPrice() {
         totalPrice = 0;
         $('#order-details li').each(function() {
-            let priceText = $(this).text().match(/Prix : (\d+\.\d+)/);
+            let priceText = $(this).text().match(/Prix : (\d+(\.\d+)?)/); // Updated regex to match prices with and without decimals
             if (priceText) {
                 totalPrice += parseFloat(priceText[1]);
             }
