@@ -297,10 +297,15 @@ final class AydenPate {
         check_ajax_referer('aydenpate_nonce', 'security');
 
         $order_id = intval($_POST['order_id']);
-        // Assuming you have a function get_order_status() that retrieves the status
-        $status = get_order_status($order_id);
 
-        wp_send_json_success(array('status' => $status));
+        // Fetch the delivery status and location from the database
+        $status = get_post_meta($order_id, '_delivery_status', true);
+        $location = get_post_meta($order_id, '_driver_location', true);
+
+        wp_send_json_success(array(
+            'status' => $status,
+            'location' => $location
+        ));
     }
 
     public function update_driver_location() {
@@ -310,8 +315,11 @@ final class AydenPate {
         $driver_latitude = sanitize_text_field($_POST['latitude']);
         $driver_longitude = sanitize_text_field($_POST['longitude']);
 
-        // Assuming you have a function update_order_location() that updates the location
-        update_order_location($order_id, $driver_latitude, $driver_longitude);
+        // Update the order location in the database
+        update_post_meta($order_id, '_driver_location', array(
+            'lat' => $driver_latitude,
+            'lng' => $driver_longitude
+        ));
 
         wp_send_json_success();
     }

@@ -25,8 +25,8 @@ jQuery(document).ready(function($) {
                 var status = response.data.status;
                 $('#status').text('Statut de la livraison : ' + status);
 
-                if (status.location) {
-                    var latLng = new google.maps.LatLng(status.location.lat, status.location.lng);
+                if (response.data.location) {
+                    var latLng = new google.maps.LatLng(response.data.location.lat, response.data.location.lng);
                     map.setCenter(latLng);
                     marker.setPosition(latLng);
                 }
