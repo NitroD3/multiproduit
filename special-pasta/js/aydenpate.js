@@ -117,7 +117,7 @@ jQuery(document).ready(function($) {
         $.post(aydenpate_data.ajax_url, formData, function(response) {
             if (response.success) {
                 alert('Produit ajouté au panier');
-                window.location.href = '/cart/';
+                window.location.href = '/tpwp3/cart/';
             } else {
                 alert('Erreur lors de l\'ajout au panier : ' + response.data.message);
                 console.log(response.data);

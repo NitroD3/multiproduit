@@ -303,7 +303,7 @@ final class AydenPate {
 
         $order_id = intval($_POST['order_id']);
         // Assuming you have a function get_order_status() that retrieves the status
-        $status = get_order_status($order_id);
+        $status = get_post_meta($order_id, '_delivery_status', true); // Change this to your actual status retrieval logic
 
         wp_send_json_success(array('status' => $status));
     }
@@ -316,7 +316,7 @@ final class AydenPate {
         $driver_longitude = sanitize_text_field($_POST['longitude']);
 
         // Assuming you have a function update_order_location() that updates the location
-        update_order_location($order_id, $driver_latitude, $driver_longitude);
+        update_post_meta($order_id, '_driver_location', array('lat' => $driver_latitude, 'lng' => $driver_longitude)); // Change this to your actual update logic
 
         wp_send_json_success();
     }

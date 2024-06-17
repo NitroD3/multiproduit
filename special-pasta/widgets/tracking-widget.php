@@ -64,3 +64,4 @@ class AydenPate_Tracking_Widget extends Widget_Base {
         <?php
     }
 }
+?>
