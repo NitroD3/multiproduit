@@ -260,7 +260,7 @@ final class AydenPate {
 
         // Loop through each item and add to cart
         foreach ($items as $type => $name) {
-            if ($name) {
+            if ($name && $name !== 'none') { // Check if the item is not "none"
                 $product_id = get_product_id_by_name($name);
 
                 if ($product_id) {
