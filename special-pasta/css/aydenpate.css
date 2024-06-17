@@ -1,53 +1,53 @@
 /* Primary colors based on the logo */
 :root {
-    --primary-color: #4CAF50; /* Green */
-    --secondary-color: #FF9800; /* Orange */
-    --background-color: #FFFFFF; /* White */
-    --text-color: #333333; /* Dark Gray */
-    --accent-color: #FF9800; /* Orange */
+    --aydenpate-primary-color: #4CAF50; /* Green */
+    --aydenpate-secondary-color: #FF9800; /* Orange */
+    --aydenpate-background-color: #FFFFFF; /* White */
+    --aydenpate-text-color: #333333; /* Dark Gray */
+    --aydenpate-accent-color: #FF9800; /* Orange */
 }
 
 /* General container style */
-.elementor-widget-container {
-    background-color: var(--background-color);
-    color: var(--text-color);
+.aydenpate-widget-container {
+    background-color: var(--aydenpate-background-color);
+    color: var(--aydenpate-text-color);
     font-family: 'Arial', sans-serif;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.elementor-widget-container h2 {
-    color: var(--primary-color);
+.aydenpate-widget-container h2 {
+    color: var(--aydenpate-primary-color);
     font-size: 28px;
     margin-bottom: 20px;
     text-align: center;
 }
 
-.elementor-widget-container h3 {
-    color: var(--secondary-color);
+.aydenpate-widget-container h3 {
+    color: var(--aydenpate-secondary-color);
     font-size: 24px;
     margin-bottom: 15px;
     text-align: center;
 }
 
 /* Step order style */
-.elementor-widget-container .order-step {
+.aydenpate-widget-container .order-step {
     display: none;
 }
 
-.elementor-widget-container .order-step.active {
+.aydenpate-widget-container .order-step.active {
     display: block;
 }
 
 /* Option style */
-.elementor-widget-container .option {
+.aydenpate-widget-container .option {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: calc(33.333% - 20px);
     margin: 10px;
-    border: 1px solid var(--primary-color);
+    border: 1px solid var(--aydenpate-primary-color);
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s, background-color 0.3s;
@@ -55,22 +55,22 @@
     background-color: #F9F9F9;
 }
 
-.elementor-widget-container .option:hover {
+.aydenpate-widget-container .option:hover {
     transform: scale(1.05);
     background-color: #E8F5E9;
 }
 
-.elementor-widget-container .option img {
+.aydenpate-widget-container .option img {
     width: 100%;
     height: 150px;
     object-fit: cover;
-    border-bottom: 1px solid var(--primary-color);
+    border-bottom: 1px solid var(--aydenpate-primary-color);
 }
 
-.elementor-widget-container .option label {
+.aydenpate-widget-container .option label {
     display: block;
     padding: 10px;
-    background-color: var(--primary-color);
+    background-color: var(--aydenpate-primary-color);
     color: #fff;
     cursor: pointer;
     width: 100%;
@@ -78,31 +78,31 @@
     transition: background-color 0.3s;
 }
 
-.elementor-widget-container .option label:hover {
-    background-color: var(--secondary-color);
+.aydenpate-widget-container .option label:hover {
+    background-color: var(--aydenpate-secondary-color);
 }
 
 /* Summary style */
-.elementor-widget-container #order-summary {
+.aydenpate-widget-container #order-summary {
     display: none;
-    background-color: var(--primary-color);
+    background-color: var(--aydenpate-primary-color);
     color: #fff;
     padding: 20px;
     border-radius: 8px;
     text-align: center;
 }
 
-.elementor-widget-container #summary-details {
+.aydenpate-widget-container #summary-details {
     margin-bottom: 20px;
 }
 
-.elementor-widget-container #total-price {
+.aydenpate-widget-container #total-price {
     font-size: 20px;
     margin-top: 20px;
 }
 
-.elementor-widget-container #add-to-cart {
-    background-color: var(--secondary-color);
+.aydenpate-widget-container #add-to-cart {
+    background-color: var(--aydenpate-secondary-color);
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -111,13 +111,13 @@
     transition: background-color 0.3s;
 }
 
-.elementor-widget-container #add-to-cart:hover {
+.aydenpate-widget-container #add-to-cart:hover {
     background-color: #E65100;
 }
 
 /* Button style */
 #aydenpate-order-form button {
-    background-color: var(--secondary-color);
+    background-color: var(--aydenpate-secondary-color);
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -132,11 +132,11 @@
 }
 
 /* Delivery fields style */
-#delivery-details input {
+#aydenpate-order-form #delivery-details input {
     width: calc(100% - 22px);
     padding: 10px;
     margin: 10px 0;
-    border: 1px solid var(--primary-color);
+    border: 1px solid var(--aydenpate-primary-color);
     border-radius: 8px;
     background-color: #fff;
 }
@@ -147,14 +147,14 @@
     text-align: center;
 }
 
-#map {
+#aydenpate-tracking-widget #map {
     width: 100%;
     height: 400px;
     border: 1px solid #ddd;
     margin-bottom: 10px;
 }
 
-#status {
+#aydenpate-tracking-widget #status {
     font-size: 18px;
     font-weight: bold;
     color: #333;

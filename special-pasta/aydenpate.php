@@ -175,7 +175,7 @@ final class AydenPate {
     public function render_order_page() {
         ob_start();
         ?>
-        <div id="aydenpate-order" class="elementor-widget-container">
+        <div id="aydenpate-order" class="aydenpate-widget-container">
             <h2>Composez votre plat</h2>
             <form id="aydenpate-order-form">
                 <div id="step-1" class="order-step">
