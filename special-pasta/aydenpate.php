@@ -208,6 +208,9 @@ final class AydenPate {
                     <input type="text" id="delivery-address" name="delivery_address" placeholder="Adresse de livraison" required pattern="^[a-zA-Z0-9\s,]*$">
                     <input type="text" id="delivery-instructions" name="delivery_instructions" placeholder="Instructions de livraison">
                     <input type="tel" id="delivery-phone" name="delivery_phone" placeholder="Numéro de téléphone" required pattern="^\d{10}$">
+                    <h3>Mode de paiement :</h3>
+                    <label><input type="radio" name="payment-method" value="carte" required> Payer par carte</label>
+                    <label><input type="radio" name="payment-method" value="espece" required> Payer par espèce</label>
                 </div>
                 <button type="button" id="prev-step" data-step="1" style="display: none;">Précédent</button>
                 <button type="button" id="next-step" data-step="1">Suivant</button>
@@ -230,6 +233,7 @@ final class AydenPate {
         $delivery_address = sanitize_text_field($_POST['delivery_address']);
         $delivery_instructions = sanitize_text_field($_POST['delivery_instructions']);
         $delivery_phone = sanitize_text_field($_POST['delivery_phone']);
+        $payment_method = sanitize_text_field($_POST['payment_method']); // Get payment method
 
         // Function to get product ID by name
         function get_product_id_by_name($product_name) {
@@ -266,6 +270,7 @@ final class AydenPate {
                         'delivery_address' => $delivery_address,
                         'delivery_instructions' => $delivery_instructions,
                         'delivery_phone' => $delivery_phone,
+                        'payment_method' => $payment_method // Include payment method in custom data
                     );
 
                     $cart_item_data = array('custom_data' => $custom_data);

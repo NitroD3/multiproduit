@@ -93,8 +93,9 @@ jQuery(document).ready(function($) {
 
         const deliveryAddress = $('#delivery-address').val();
         const deliveryPhone = $('#delivery-phone').val();
+        const paymentMethod = $('input[name="payment-method"]:checked').val(); // Get selected payment method
 
-        if (!deliveryAddress || !deliveryPhone) {
+        if (!deliveryAddress || !deliveryPhone || !paymentMethod) {
             alert('Veuillez remplir tous les champs obligatoires.');
             return;
         }
@@ -109,13 +110,14 @@ jQuery(document).ready(function($) {
             drink: $('#step-5 input:checked').val(),
             delivery_address: deliveryAddress,
             delivery_instructions: $('#delivery-instructions').val(),
-            delivery_phone: deliveryPhone
+            delivery_phone: deliveryPhone,
+            payment_method: paymentMethod // Include payment method in form data
         };
 
         $.post(aydenpate_data.ajax_url, formData, function(response) {
             if (response.success) {
                 alert('Produit ajouté au panier');
-                window.location.href = '/cart/';
+                window.location.href = '/tpwp3/cart/';
             } else {
                 alert('Erreur lors de l\'ajout au panier : ' + response.data.message);
                 console.log(response.data);
