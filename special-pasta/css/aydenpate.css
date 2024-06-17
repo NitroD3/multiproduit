@@ -1,20 +1,20 @@
-/* Couleurs primaires basées sur le logo */
+/* Primary colors based on the logo */
 :root {
-    --primary-color: #6A8B46;
-    --secondary-color: #D4B02F;
-    --background-color: #F6F3E6;
-    --text-color: #6A8B46;
-    --accent-color: #D4B02F;
+    --primary-color: #4CAF50; /* Green */
+    --secondary-color: #FF9800; /* Orange */
+    --background-color: #FFFFFF; /* White */
+    --text-color: #333333; /* Dark Gray */
+    --accent-color: #FF9800; /* Orange */
 }
 
-/* Style général du conteneur */
+/* General container style */
 .elementor-widget-container {
     background-color: var(--background-color);
     color: var(--text-color);
     font-family: 'Arial', sans-serif;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .elementor-widget-container h2 {
@@ -28,9 +28,10 @@
     color: var(--secondary-color);
     font-size: 24px;
     margin-bottom: 15px;
+    text-align: center;
 }
 
-/* Style pour les étapes de la commande */
+/* Step order style */
 .elementor-widget-container .order-step {
     display: none;
 }
@@ -39,27 +40,31 @@
     display: block;
 }
 
-/* Style pour les options */
+/* Option style */
 .elementor-widget-container .option {
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: calc(33.333% - 20px);
     margin: 10px;
-    text-align: center;
     border: 1px solid var(--primary-color);
     border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.3s;
+    transition: transform 0.3s, background-color 0.3s;
     cursor: pointer;
+    background-color: #F9F9F9;
 }
 
 .elementor-widget-container .option:hover {
     transform: scale(1.05);
+    background-color: #E8F5E9;
 }
 
 .elementor-widget-container .option img {
     width: 100%;
     height: 150px;
     object-fit: cover;
+    border-bottom: 1px solid var(--primary-color);
 }
 
 .elementor-widget-container .option label {
@@ -68,9 +73,16 @@
     background-color: var(--primary-color);
     color: #fff;
     cursor: pointer;
+    width: 100%;
+    text-align: center;
+    transition: background-color 0.3s;
 }
 
-/* Style pour le résumé de la commande */
+.elementor-widget-container .option label:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Summary style */
 .elementor-widget-container #order-summary {
     display: none;
     background-color: var(--primary-color);
@@ -100,10 +112,10 @@
 }
 
 .elementor-widget-container #add-to-cart:hover {
-    background-color: #b38924;
+    background-color: #E65100;
 }
 
-/* Style pour les boutons */
+/* Button style */
 #aydenpate-order-form button {
     background-color: var(--secondary-color);
     color: #fff;
@@ -116,10 +128,10 @@
 }
 
 #aydenpate-order-form button:hover {
-    background-color: #b38924;
+    background-color: #E65100;
 }
 
-/* Style pour les champs de livraison */
+/* Delivery fields style */
 #delivery-details input {
     width: calc(100% - 22px);
     padding: 10px;
@@ -129,7 +141,7 @@
     background-color: #fff;
 }
 
-/* CSS updates to improve the visuals of the tracking widget */
+/* Tracking widget style */
 #aydenpate-tracking-widget {
     margin-top: 20px;
     text-align: center;
